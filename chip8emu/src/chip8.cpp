@@ -8,11 +8,7 @@ void Chip8::reset() {
 
 }
 
-void Chip8::init() {
-
-}
-
-bool Chip8::load_rom(const uint8_t * rom) {
+bool Chip8::load_rom(const uint8_t &rom) {
 	return false;
 }
 

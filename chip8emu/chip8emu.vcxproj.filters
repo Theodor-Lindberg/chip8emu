@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\chip8.h">
+    <ClInclude Include="include\chip8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
