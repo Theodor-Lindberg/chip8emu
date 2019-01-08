@@ -26,5 +26,8 @@
     <ClInclude Include="include\chip8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\fontset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
