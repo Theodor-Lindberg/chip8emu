@@ -7,5 +7,6 @@ int main(int argc, char *argv[]) {
 		std::cout << "SDL could not be initialized! SDL Error: " << SDL_GetError() << std::endl;
 	}
 
+	Chip8 chip8 = Chip8();
 	return EXIT_SUCCESS;
 }
