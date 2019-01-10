@@ -29,15 +29,15 @@ private:
 	static constexpr size_t ROM_START_ADDRESS = 0x200;
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
 
-	uint16_t I;						// Index register
-	uint16_t pc;					// Program counter
+	uint16_t I = 0;						// Index register
+	uint16_t pc = ROM_START_ADDRESS;	// Program counter
 
-	uint16_t sp;					// Stack pointer
-	uint16_t stack[STACK_SIZE];
+	uint16_t sp = 0;					// Stack pointer
+	uint16_t stack[STACK_SIZE] = {};
 
-	uint8_t memory[MEMORY_SIZE];	// Main memory
-	uint8_t V[GPDR_COUNT];			// General purpose data registers
-	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT]; // Buffer to draw graphics to
+	uint8_t memory[MEMORY_SIZE] = {};	// Main memory
+	uint8_t V[GPDR_COUNT] = {};			// General purpose data registers
+	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
 
 	/// <summary> Load a font set into main memory. </summary>
 	/// <param name="rom"> Reference to the font set. </param>

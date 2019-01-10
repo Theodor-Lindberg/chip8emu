@@ -3,7 +3,6 @@
 #include "fontset.h"
 
 Chip8::Chip8() {
-	reset();
 	if (!load_font(font_set, sizeof(font_set))) {
 		// TODO: Handle
 	}
@@ -25,8 +24,10 @@ void Chip8::reset() {
 	std::memset(&stack, 0, STACK_SIZE);
 	std::memset(&V, 0, GPDR_COUNT);
 	std::memset(&gfx_buffer, 0, sizeof(gfx_buffer));
+
 	pc = ROM_START_ADDRESS;
 	I = 0;
+	sp = 0;
 }
 
 void Chip8::emulate_cycle() {
