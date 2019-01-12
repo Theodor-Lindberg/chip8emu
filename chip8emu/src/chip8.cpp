@@ -1,6 +1,6 @@
-#include <cstring>
 #include "chip8.h"
 #include "fontset.h"
+#include <cstring>
 
 Chip8::Chip8() {
 	if (!load_font(font_set, sizeof(font_set))) {
@@ -10,7 +10,7 @@ Chip8::Chip8() {
 
 Chip8::~Chip8() { }
 
-bool Chip8::load_font(const uint8_t* p_font, const size_t &size) {
+bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
 	if (size > ROM_START_ADDRESS) {
 		return false;
 	}
@@ -34,7 +34,7 @@ void Chip8::emulate_cycle() {
 
 }
 
-bool Chip8::load_rom(const uint8_t* p_rom, const size_t &size) {
+bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
 	if (size > MAX_ROM_SIZE) {
 		return false;
 	}

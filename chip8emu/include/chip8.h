@@ -1,8 +1,8 @@
-#include <cstdint>
-#include "chip8instructions.h"
-
 #ifndef CHIP_8
 #define CHIP_8
+
+#include "chip8instructions.h"
+#include <cstdint>
 
 class Chip8 {
 public:
@@ -18,7 +18,7 @@ public:
 	/// <summary> Load a ROM into main memory. </summary>
 	/// <param name="rom"> Reference to the rom. </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
-	bool load_rom(const uint8_t* p_rom, const size_t &size);
+	bool load_rom(const uint8_t* const p_rom, const size_t &size);
 
 private:
 	friend class OPCodes;
@@ -45,7 +45,7 @@ private:
 	/// <summary> Load a font set into main memory. </summary>
 	/// <param name="rom"> Reference to the font set. </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
-	bool load_font(const uint8_t* p_font, const size_t &size);
+	bool load_font(const uint8_t* const p_font, const size_t &size);
 };
 
 #endif // !CHIP_8
