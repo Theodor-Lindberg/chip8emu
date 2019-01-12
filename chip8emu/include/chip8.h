@@ -1,4 +1,5 @@
 #include <cstdint>
+#include "chip8instructions.h"
 
 #ifndef CHIP_8
 #define CHIP_8
@@ -20,6 +21,8 @@ public:
 	bool load_rom(const uint8_t* p_rom, const size_t &size);
 
 private:
+	friend class OPCodes;
+	OPCodes op_codes = OPCodes(*this);
 	// Define constants
 	static constexpr size_t STACK_SIZE = 16;
 	static constexpr size_t MEMORY_SIZE = 4096;
