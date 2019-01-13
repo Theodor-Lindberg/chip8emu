@@ -20,11 +20,29 @@ public:
 private:
 	Chip8& chip8;
 
-	///<summary> Clear the display. </summary>
+	/// <summary> Get the code of the operation. </summary>
+	/// <param name="op_code"> The operation code to analyze. </param>
+	///<returns> The first 4 bits which represent the code. </returns>
+	uint16_t get_op(uint16_t op_code);
+
+	/// <summary> Get the code of the operation. </summary>
+	/// <param name="op_code"> The operation code to analyze. </param>
+	///<returns> The first 4 bits which represent the code. </returns>
+	uint16_t get_data(uint16_t);
+
+	/// <summary> Clear the display. </summary>
 	void CLS();
 
-	///<summary> Return from a subroutine. </summary>
+	/// <summary> Return from a subroutine. </summary>
 	void RET();
+
+	/// <summary> Jump to address. </summary>
+	/// <param name="address"> The address to jump to. </param>
+	void JP_ADDR(uint16_t address);
+
+	/// <summary> Call subroutine at address. </summary>
+	/// <param name="address"> The address to make a call to. </param>
+	void CALL_ADDR(uint16_t address);
 };
 
 #endif // !CHIP8_INSTRUCTIONS
