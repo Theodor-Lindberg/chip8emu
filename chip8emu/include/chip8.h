@@ -16,7 +16,7 @@ public:
 	void emulate_cycle();
 
 	/// <summary> Load a ROM into main memory. </summary>
-	/// <param name="rom"> Reference to the rom. </param>
+	/// <param name="p_rom"> Pointer to the rom. </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
 	bool load_rom(const uint8_t* const p_rom, const size_t &size);
 
@@ -43,7 +43,7 @@ private:
 	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
 
 	/// <summary> Load a font set into main memory. </summary>
-	/// <param name="rom"> Reference to the font set. </param>
+	/// <param name="p_font"> Pointer to the font set. </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
 	bool load_font(const uint8_t* const p_font, const size_t &size);
 };
