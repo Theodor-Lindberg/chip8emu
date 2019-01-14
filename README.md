@@ -6,8 +6,12 @@ This is an emulator for [CHIP-8][chip8] written in C++ with the C library [SDL][
 It was initially used on the COSMAC VIP and Telmac 1800 8-bit microcomputers in the mid-1970s. 
 CHIP-8 programs are run on a CHIP-8 virtual machine.*
 
+## Implementation
+Please read my [Wiki documentation][wikihome] for details about my specific implementation.
+
 ## Developement environment
 I'm using Visual Studio as developement environment, but in the future I maybe create a Makefile or CMake if I want to use Linux.
 
 [chip8]:https://en.wikipedia.org/wiki/CHIP-8
 [sdl]:https://www.libsdl.org/
+[wikihome]:https://github.com/Theodor-Lindberg/chip8emu/wiki
