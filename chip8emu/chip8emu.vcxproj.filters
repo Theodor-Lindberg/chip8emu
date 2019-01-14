@@ -26,13 +26,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\chip8.h">
+    <ClInclude Include="include\chip8.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\fontset.h">
+    <ClInclude Include="include\chip8instructions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\chip8instructions.h">
+    <ClInclude Include="include\fontset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "chip8.h"
+#include "chip8.hpp"
 #include <cstring>
 
 OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }

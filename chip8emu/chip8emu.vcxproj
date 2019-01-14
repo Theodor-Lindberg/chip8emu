@@ -24,9 +24,9 @@
     <ClCompile Include="src\chip8instructions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\chip8.h" />
-    <ClInclude Include="include\fontset.h" />
-    <ClInclude Include="include\chip8instructions.h" />
+    <ClInclude Include="include\chip8.hpp" />
+    <ClInclude Include="include\fontset.hpp" />
+    <ClInclude Include="include\chip8instructions.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

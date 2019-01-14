@@ -1,5 +1,5 @@
-#include "chip8.h"
-#include "fontset.h"
+#include "chip8.hpp"
+#include "fontset.hpp"
 #include <cstring>
 
 Chip8::Chip8() {

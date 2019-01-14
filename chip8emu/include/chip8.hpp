@@ -1,7 +1,7 @@
 #ifndef CHIP_8
 #define CHIP_8
 
-#include "chip8instructions.h"
+#include "chip8instructions.hpp"
 
 class Chip8 {
 public:
