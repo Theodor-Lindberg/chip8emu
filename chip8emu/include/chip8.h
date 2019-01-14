@@ -20,7 +20,7 @@ public:
 	bool load_rom(const uint8_t* const p_rom, const size_t &size);
 
 	/// <summary> The flag is set if changes have been made to the display. </summary>
-	bool draw_flag();
+	bool draw_flag() const;
 
 private:
 	friend class OPCodes;
@@ -37,7 +37,7 @@ private:
 	uint16_t I = 0;						// Index register
 	uint16_t pc = ROM_START_ADDRESS;	// Program counter
 
-	uint8_t sp = 0;					// Stack pointer
+	uint8_t sp = 0;						// Stack pointer
 	uint16_t stack[STACK_SIZE] = {};
 
 	uint8_t memory[MEMORY_SIZE] = {};	// Main memory
@@ -53,7 +53,7 @@ private:
 
 	/// <summary> Fetch the current operation code. </summary>
 	/// <returns> The current operation code. </returns>
-	uint16_t fetch_opcode();
+	uint16_t fetch_opcode() const;
 };
 
 #endif // !CHIP_8

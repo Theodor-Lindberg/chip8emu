@@ -12,8 +12,8 @@ Chip8::~Chip8() { }
 
 void Chip8::reset() {
 	std::memset((uint8_t*)memory + ROM_START_ADDRESS, 0, MAX_ROM_SIZE);
-	std::memset(&stack, 0, STACK_SIZE);
-	std::memset(&V, 0, GPDR_COUNT);
+	std::memset(&stack, 0, sizeof(stack));
+	std::memset(&V, 0, sizeof(V));
 	std::memset(&gfx_buffer, 0, sizeof(gfx_buffer));
 
 	pc = ROM_START_ADDRESS;
@@ -36,7 +36,7 @@ bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
 	return true;
 }
 
-bool Chip8::draw_flag() {
+bool Chip8::draw_flag() const {
 	return _draw_flag;
 }
 
@@ -49,6 +49,6 @@ bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
 	return true;
 }
 
-uint16_t Chip8::fetch_opcode() {
+uint16_t Chip8::fetch_opcode() const {
 	return memory[pc] << 8 | memory[pc + 1]; // Merge two bytes
 }

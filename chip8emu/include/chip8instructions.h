@@ -20,16 +20,6 @@ public:
 private:
 	Chip8& chip8;
 
-	/// <summary> Get the code of the operation. </summary>
-	/// <param name="op_code"> The operation code to analyze. </param>
-	///<returns> The first 4 bits which represent the code. </returns>
-	uint16_t get_op(uint16_t op_code);
-
-	/// <summary> Get the code of the operation. </summary>
-	/// <param name="op_code"> The operation code to analyze. </param>
-	///<returns> The first 4 bits which represent the code. </returns>
-	uint16_t get_data(uint16_t);
-
 	/// <summary> Clear the display. </summary>
 	void CLS();
 
@@ -41,8 +31,20 @@ private:
 	void JP_ADDR(uint16_t address);
 
 	/// <summary> Call subroutine at address. </summary>
-	/// <param name="address"> The address to make a call to. </param>
+	/// <param name="adress"> The address of the subroutine. </param>
 	void CALL_ADDR(uint16_t address);
+
+	/// <summary> Skip next instruction if Vx equals the last byte. </summary>
+	/// <param name="adress"> The whole operation code. </param>
+	void SE_VxByte(uint16_t& op_code);
+
+	/// <summary> Skip next instruction if Vx does not equal the last byte. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SNE_Vx_Byte(uint16_t& op_code);
+
+	/// <summary> Skip next instruction if Vx equals Vy. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SE_Vx_Vy(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS

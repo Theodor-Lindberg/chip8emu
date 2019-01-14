@@ -6,7 +6,7 @@ OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }
 OPCodes::~OPCodes() { }
 
 bool OPCodes::execute(uint16_t& op_code) {
-	switch (get_op(op_code))
+	switch (op_code & 0xF000)
 	{
 	case 0x0000:
 		switch (op_code)
@@ -21,23 +21,23 @@ bool OPCodes::execute(uint16_t& op_code) {
 			return false;
 		}
 	case 0x1000:						// 1NNN
-		JP_ADDR(get_data(op_code));
+		JP_ADDR(op_code & 0x0FFF);
 		break;
 	case 0x2000:						// 2NNN
-		CALL_ADDR(get_data(op_code));
+		CALL_ADDR(op_code & 0x0FFF);
 		break;
+	case 0x3000:						// 3xkk
+		SE_VxByte(op_code);
+		break;
+	case 0x4000:						// 4xkk
+		SNE_Vx_Byte(op_code);
+		break;
+	case 0x5000:
+
 	default:
 		return false;
 	}
 	return true;
-}
-
-uint16_t OPCodes::get_op(uint16_t op_code) {
-	return op_code & 0xF000;
-}
-
-uint16_t OPCodes::get_data(uint16_t op_code) {
-	return op_code & 0x0FFF;
 }
 
 void OPCodes::CLS() {
@@ -60,4 +60,25 @@ void OPCodes::CALL_ADDR(uint16_t address) {
 	chip8.sp++;
 	chip8.stack[chip8.sp] = chip8.pc;
 	chip8.pc = address;
+}
+
+void OPCodes::SE_VxByte(uint16_t& op_code) {
+	if (chip8.V[(op_code & 0x0F00) >> 8] == (op_code & 0x00FF))
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
+}
+
+void OPCodes::SNE_Vx_Byte(uint16_t& op_code) {
+	if (chip8.V[(op_code & 0x0F00) >> 8] != (op_code & 0x00FF))
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
+}
+
+void OPCodes::SE_Vx_Vy(uint16_t& op_code) {
+	if (chip8.V[(op_code & 0x0F00) >> 8] == chip8.V[(op_code & 0x00F0) >> 8])
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
 }
