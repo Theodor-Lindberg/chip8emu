@@ -32,8 +32,32 @@ bool OPCodes::execute(uint16_t& op_code) {
 	case 0x4000:						// 4xkk
 		SNE_Vx_Byte(op_code);
 		break;
-	case 0x5000:
+	case 0x5000:						// 5xy0
+		SE_Vx_Vy(op_code);
+		break;
+	case 0x6000:						// 6xkk
+		LD_Vx_Byte(op_code);
+		break;
+	case 0x7000:						// 7xkk
+		ADD_Vx_Byte(op_code);
+		break;
+	case 0x8000:						// 8xyN
+		switch (op_code & 0x000F)
+		{
+		case 0x0000:
+			LD_Vx_Vy(op_code);
+			break;
+		case 0x0001:
+			OR_Vx_Vy(op_code);
+			break;
+		case 0x0002:
+			AND_Vx_Vy(op_code);
+			break;
+		case 0x0003:
 
+		default:
+			return false;
+		}
 	default:
 		return false;
 	}
@@ -77,8 +101,38 @@ void OPCodes::SNE_Vx_Byte(uint16_t& op_code) {
 }
 
 void OPCodes::SE_Vx_Vy(uint16_t& op_code) {
-	if (chip8.V[(op_code & 0x0F00) >> 8] == chip8.V[(op_code & 0x00F0) >> 8])
+	if (chip8.V[(op_code & 0x0F00) >> 8] == chip8.V[(op_code & 0x00F0) >> 4])
 		chip8.pc += 4;
 	else
 		chip8.pc += 2;
+}
+
+void OPCodes::LD_Vx_Byte(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] = (op_code & 0x00FF);
+	chip8.pc += 2;
+}
+
+void OPCodes::ADD_Vx_Byte(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] += (op_code & 0x00FF);
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_Vx_Vy(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] = chip8.V[(op_code & 0x00F0) >> 4];
+	chip8.pc += 2;
+}
+
+void OPCodes::OR_Vx_Vy(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] |= chip8.V[(op_code & 0x00F0) >> 4];
+	chip8.pc += 2;
+}
+
+void OPCodes::AND_Vx_Vy(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] &= chip8.V[(op_code & 0x00F0) >> 4];
+	chip8.pc += 2;
+}
+
+void OPCodes::XOR_Vx_Vy(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] ^= chip8.V[(op_code & 0x00F0) >> 4];
+	chip8.pc += 2;
 }

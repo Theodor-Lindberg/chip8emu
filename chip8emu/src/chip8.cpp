@@ -28,9 +28,8 @@ void Chip8::emulate_cycle() {
 }
 
 bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
-	if (size > MAX_ROM_SIZE) {
+	if (size > MAX_ROM_SIZE)
 		return false;
-	}
 
 	std::memcpy(memory, p_rom, size);
 	return true;
@@ -41,9 +40,8 @@ bool Chip8::draw_flag() const {
 }
 
 bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
-	if (size > ROM_START_ADDRESS) {
+	if (size > ROM_START_ADDRESS)
 		return false;
-	}
 
 	std::memcpy(memory, p_font, size);
 	return true;

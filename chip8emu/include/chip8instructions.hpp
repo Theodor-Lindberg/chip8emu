@@ -34,17 +34,41 @@ private:
 	/// <param name="adress"> The address of the subroutine. </param>
 	void CALL_ADDR(uint16_t address);
 
-	/// <summary> Skip next instruction if Vx equals the last byte. </summary>
+	/// <summary> Skip next instruction if the value of register Vx equals the last byte. </summary>
 	/// <param name="adress"> The whole operation code. </param>
 	void SE_VxByte(uint16_t& op_code);
 
-	/// <summary> Skip next instruction if Vx does not equal the last byte. </summary>
+	/// <summary> Skip next instruction if the value of register Vx does not equal the last byte. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void SNE_Vx_Byte(uint16_t& op_code);
 
-	/// <summary> Skip next instruction if Vx equals Vy. </summary>
+	/// <summary> Skip next instruction if value of register Vx equals to the value of register Vy. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void SE_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Set Vx to the last byte. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_Vx_Byte(uint16_t& op_code);
+
+	/// <summary> Add the value of the last byte to the value of register Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void ADD_Vx_Byte(uint16_t& op_code);
+
+	/// <summary> Set the value of register Vx to the value of register Vy. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Performs a bitwise OR on the values of register Vx and Vy, then stores the result in Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void OR_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Performs a bitwise AND on the values of register Vx and Vy, then stores the result in Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void AND_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Performs a bitwise XOR on the values of register Vx and Vy, then stores the result in Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void XOR_Vx_Vy(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS
