@@ -69,6 +69,26 @@ private:
 	/// <summary> Performs a bitwise XOR on the values of register Vx and Vy, then stores the result in Vx. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void XOR_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Add the values of register Vx and Vy and store the result in Vx, 
+	/// if the result is greater than one byte the carry flag VF is set 1 otherwise 0. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void ADD_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Substract the value of register Vx with the value of register Vy and store the result in Vx, 
+	/// if the value of Vy is greater than the value of Vx the carry flag VF is set 0 otherwise 1. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SUB_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Shift the value of register Vy one bit right and store the result in Vx, 
+	/// set register VF to the least significant bit prior to the shift. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SHR_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Substract the value of register Vy with the value of register Vx and store the result in Vx, 
+	/// if the value of Vx is greater than the value of Vy the carry flag VF is set 0 otherwise 1. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SUBN_Vx_Vy(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS

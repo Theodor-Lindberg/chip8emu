@@ -54,7 +54,65 @@ bool OPCodes::execute(uint16_t& op_code) {
 			AND_Vx_Vy(op_code);
 			break;
 		case 0x0003:
-
+			XOR_Vx_Vy(op_code);
+			break;
+		case 0x0004:
+			ADD_Vx_Vy(op_code);
+			break;
+		case 0x0005:
+			SUB_Vx_Vy(op_code);
+			break;
+		case 0x0006:
+			SHR_Vx_Vy(op_code);
+			break;
+		case 0x0007:
+			break;
+		case 0x000E:
+			break;
+		default:
+			return false;
+		}
+	case 0x9000:						// 9xy0
+		break;
+	case 0xA000:						// ANNN
+		break;
+	case 0xB000:						// BNNN
+		break;
+	case 0xC000:						// Cxkk
+		break;
+	case 0xD000:						// Dxyn
+		break;
+	case 0xE000:						// Ex
+		switch (op_code & 0x00FF)
+		{
+		case 0x009E:
+			break;
+		case 0x00A1:
+			break;
+		default:
+			return false;
+		}
+	case 0xF000:						// Fx
+		switch (op_code & 0x00FF)
+		{
+		case 0x0007:
+			break;
+		case 0x000A:
+			break;
+		case 0x0015:
+			break;
+		case 0x0018:
+			break;
+		case 0x001E:
+			break;
+		case 0x0029:
+			break;
+		case 0x0033:
+			break;
+		case 0x0055:
+			break;
+		case 0x0065:
+			break;
 		default:
 			return false;
 		}
@@ -134,5 +192,37 @@ void OPCodes::AND_Vx_Vy(uint16_t& op_code) {
 
 void OPCodes::XOR_Vx_Vy(uint16_t& op_code) {
 	chip8.V[(op_code & 0x0F00) >> 8] ^= chip8.V[(op_code & 0x00F0) >> 4];
+	chip8.pc += 2;
+}
+
+void OPCodes::ADD_Vx_Vy(uint16_t& op_code) {
+	uint8_t x = (op_code & 0x0F00) >> 8;
+	uint8_t y = (op_code & 0x00F0) >> 4;
+	chip8.V[(op_code & 0x0F00) >> 8] = (chip8.V[x] + chip8.V[y]) & 0x00FF;
+	chip8.V[0xF] = chip8.V[x] + chip8.V[y] > 0xFF ? 1 : 0;
+	chip8.pc += 2;
+}
+
+void OPCodes::SUB_Vx_Vy(uint16_t& op_code) {
+	uint8_t x = (op_code & 0x0F00) >> 8;
+	uint8_t y = (op_code & 0x00F0) >> 4;
+	chip8.V[x] -= chip8.V[y];
+	chip8.V[0xF] = chip8.V[y] > chip8.V[y] ? 0 : 1;
+	chip8.pc += 2;
+}
+
+void OPCodes::SHR_Vx_Vy(uint16_t& op_code) {
+	uint8_t x = (op_code & 0x0F00) >> 8;
+	uint8_t y = (op_code & 0x00F0) >> 4;
+	chip8.V[x] = chip8.V[y] >> 1;
+	chip8.V[0xF] = chip8.V[x] & 0x0F;
+	chip8.pc += 2;
+}
+
+void OPCodes::SUBN_Vx_Vy(uint16_t& op_code) {
+	uint8_t x = (op_code & 0x0F00) >> 8;
+	uint8_t y = (op_code & 0x00F0) >> 4;
+	chip8.V[x] = chip8.V[y] - chip8.V[x];
+	chip8.V[0xF] = chip8.V[x] > chip8.V[y] ? 0 : 1;
 	chip8.pc += 2;
 }
