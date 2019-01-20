@@ -11,7 +11,7 @@ public:
 	~OPCodes();
 
 	/// <summary> Execute instruction based on operation code </summary>
-	/// <remarks> A switch is used instead a map or array of function pointers
+	/// <remarks> A switch is used instead of a map or array of function pointers
 	/// so that the compiler can optimize it into a faster lookup table. </remarks>
 	/// <param name="op_code"> The code of the instruction </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
@@ -81,7 +81,7 @@ private:
 	void SUB_Vx_Vy(uint16_t& op_code);
 
 	/// <summary> Shift the value of register Vy one bit right and store the result in Vx, 
-	/// set register VF to the least significant bit prior to the shift. </summary>
+	/// set register VF to the least significant bit prior to the shift and then divide Vx by 2. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void SHR_Vx_Vy(uint16_t& op_code);
 
@@ -89,6 +89,23 @@ private:
 	/// if the value of Vx is greater than the value of Vy the carry flag VF is set 0 otherwise 1. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void SUBN_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Shift the value of register Vy one bit left and store the result in Vx, 
+	/// set register VF to the most significant bit prior to the shift and the multiply Vx by 2. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SHL_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Skip next instruction if the value of register Vx does not equal the value of register Vy. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SNE_Vx_Vy(uint16_t& op_code);
+
+	/// <summary> Set the value of register I to the last 12 bits of the operation code. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_I_ADDR(uint16_t& op_code);
+
+	/// <summary> Jump to the address the value of register Vx plus the last 12 bits op the operation code. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void JP_V0_ADDR(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS

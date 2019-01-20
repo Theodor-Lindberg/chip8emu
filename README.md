@@ -7,7 +7,7 @@ It was initially used on the COSMAC VIP and Telmac 1800 8-bit microcomputers in 
 CHIP-8 programs are run on a CHIP-8 virtual machine.*
 
 ## Implementation
-Since they are various implementations of the CHIP-8 please read my [Wiki documentation][wikihome] for details about this implementation.
+Since there are various implementations of the CHIP-8 please read my [Wiki documentation][wikihome] for details about this implementation.
 
 ## Developement environment
 I'm using Visual Studio as developement environment on Windows 10, but in the future I maybe create a Makefile or CMake if I decide to make it cross-platform. 

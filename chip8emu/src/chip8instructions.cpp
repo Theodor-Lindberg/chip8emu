@@ -66,17 +66,22 @@ bool OPCodes::execute(uint16_t& op_code) {
 			SHR_Vx_Vy(op_code);
 			break;
 		case 0x0007:
+			SUBN_Vx_Vy(op_code);
 			break;
 		case 0x000E:
+			SHL_Vx_Vy(op_code);
 			break;
 		default:
 			return false;
 		}
 	case 0x9000:						// 9xy0
+		SNE_Vx_Vy(op_code);
 		break;
 	case 0xA000:						// ANNN
+		LD_I_ADDR(op_code);
 		break;
 	case 0xB000:						// BNNN
+		JP_V0_ADDR(op_code);
 		break;
 	case 0xC000:						// Cxkk
 		break;
@@ -215,7 +220,8 @@ void OPCodes::SHR_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	chip8.V[x] = chip8.V[y] >> 1;
-	chip8.V[0xF] = chip8.V[x] & 0x0F;
+	chip8.V[x] /= 2;
+	chip8.V[0xF] = chip8.V[x] & 0x1;
 	chip8.pc += 2;
 }
 
@@ -225,4 +231,29 @@ void OPCodes::SUBN_Vx_Vy(uint16_t& op_code) {
 	chip8.V[x] = chip8.V[y] - chip8.V[x];
 	chip8.V[0xF] = chip8.V[x] > chip8.V[y] ? 0 : 1;
 	chip8.pc += 2;
+}
+
+void OPCodes::SHL_Vx_Vy(uint16_t& op_code) {
+	uint8_t x = (op_code & 0x0F00) >> 8;
+	uint8_t y = (op_code & 0x00F0) >> 4;
+	chip8.V[x] = chip8.V[y] << 1;
+	chip8.V[x] *= 2;
+	chip8.V[0xF] = (chip8.V[x] & 0x10) >> 4;
+	chip8.pc += 2;
+}
+
+void OPCodes::SNE_Vx_Vy(uint16_t& op_code) {
+	if (chip8.V[(op_code & 0x0F00) >> 8] != chip8.V[(op_code & 0x00F0) >> 4])
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
+}
+
+void OPCodes::LD_I_ADDR(uint16_t& op_code) {
+	chip8.I = op_code & 0x0FFF;
+	chip8.pc += 2;
+}
+
+void OPCodes::JP_V0_ADDR(uint16_t& op_code) {
+	chip8.pc = chip8.V[(op_code & 0x0F00) >> 8] + op_code & 0x0FFF;
 }
