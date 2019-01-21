@@ -84,8 +84,10 @@ bool OPCodes::execute(uint16_t& op_code) {
 		JP_V0_ADDR(op_code);
 		break;
 	case 0xC000:						// Cxkk
+		RND_Vx_Byte(op_code);
 		break;
 	case 0xD000:						// Dxyn
+		DRW_Vx_Vy_Nibble(op_code);
 		break;
 	case 0xE000:						// Ex
 		switch (op_code & 0x00FF)
@@ -256,4 +258,14 @@ void OPCodes::LD_I_ADDR(uint16_t& op_code) {
 
 void OPCodes::JP_V0_ADDR(uint16_t& op_code) {
 	chip8.pc = chip8.V[(op_code & 0x0F00) >> 8] + op_code & 0x0FFF;
+}
+
+void OPCodes::RND_Vx_Byte(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] = distr(rng_eng) & (op_code & 0x00FF);
+	chip8.pc += 2;
+}
+
+void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
+	chip8.pc += 2;
+	chip8.draw_flag = true;
 }

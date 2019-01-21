@@ -2,6 +2,7 @@
 #define CHIP8_INSTRUCTIONS
 
 #include <cstdint>
+#include <random>
 
 class Chip8;
 
@@ -19,6 +20,9 @@ public:
 
 private:
 	Chip8& chip8;
+
+	std::mt19937 rng_eng { std::random_device()() };
+	std::uniform_int_distribution<uint16_t> distr { 0, 0xFF };
 
 	/// <summary> Clear the display. </summary>
 	void CLS();
@@ -106,6 +110,14 @@ private:
 	/// <summary> Jump to the address the value of register Vx plus the last 12 bits op the operation code. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void JP_V0_ADDR(uint16_t& op_code);
+
+	/// <summary> Generate a random number and perform a logical AND with the last byte of the operation code. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void RND_Vx_Byte(uint16_t& op_code);
+
+	/// <summary> Display n-byte sprite starting at memory location I at (Vx, Vy), set VF if there was a collision. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void DRW_Vx_Vy_Nibble(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS
