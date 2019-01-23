@@ -37,6 +37,7 @@ private:
 	static constexpr size_t SCREEN_HEIGHT = 32;
 	static constexpr size_t ROM_START_ADDRESS = 0x200;
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
+	static constexpr size_t TIMER_FREQUENCY = 60;
 
 	uint16_t I = 0;						// Index register
 	uint16_t pc = ROM_START_ADDRESS;	// Program counter
@@ -48,7 +49,7 @@ private:
 	uint8_t V[GPDR_COUNT] = {};			// General purpose data registers
 	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
 
-	uint16_t clock_frequency = 60;
+	uint16_t clock_frequency = TIMER_FREQUENCY;
 	uint16_t cpu_cycles = 0;
 	uint8_t sound_timer = 0;
 	uint8_t delay_timer = 0;

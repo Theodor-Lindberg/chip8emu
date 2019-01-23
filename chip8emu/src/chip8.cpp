@@ -20,7 +20,7 @@ void Chip8::reset() {
 	I = 0;
 	sp = 0;
 
-	clock_frequency = 60;
+	clock_frequency = TIMER_FREQUENCY;
 	cpu_cycles = 0;
 	sound_timer = 0;
 	delay_timer = 0;
@@ -30,7 +30,7 @@ void Chip8::emulate_cycle() {
 	_draw_flag = false;
 
 	cpu_cycles++;
-	if (cpu_cycles == clock_frequency / 60) {
+	if (cpu_cycles == clock_frequency / TIMER_FREQUENCY) {
 		if (sound_timer > 0)
 			sound_timer--;
 		if (delay_timer > 0)
@@ -54,10 +54,9 @@ bool Chip8::draw_flag() const {
 }
 
 void Chip8::set_clock_freq(uint16_t& frequency) {
-	if (frequency < sound_timer)
-		sound_timer -= frequency;
-	if (frequency < delay_timer)
-		delay_timer -= frequency;
+	sound_timer %= frequency;
+	delay_timer %= frequency;
+	cpu_cycles %= frequency / TIMER_FREQUENCY;
 
 	clock_frequency = frequency;
 }
