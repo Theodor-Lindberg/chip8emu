@@ -22,6 +22,10 @@ public:
 	/// <summary> The flag is set if changes have been made to the display. </summary>
 	bool draw_flag() const;
 
+	/// <summary> Set the frequency of which the cpu will be running to get timers correct. </summary>
+	/// <param name="frequency"> The frequency of the clock. </param>
+	void set_clock_freq(uint16_t& frequency);
+
 private:
 	friend class OPCodes;
 	OPCodes op_codes = OPCodes(*this);
@@ -43,6 +47,11 @@ private:
 	uint8_t memory[MEMORY_SIZE] = {};	// Main memory
 	uint8_t V[GPDR_COUNT] = {};			// General purpose data registers
 	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
+
+	uint16_t clock_frequency = 60;
+	uint16_t cpu_cycles = 0;
+	uint8_t sound_timer = 0;
+	uint8_t delay_timer = 0;
 
 	bool _draw_flag;
 

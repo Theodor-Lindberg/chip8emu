@@ -267,5 +267,5 @@ void OPCodes::RND_Vx_Byte(uint16_t& op_code) {
 
 void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 	chip8.pc += 2;
-	chip8.draw_flag = true;
+	chip8._draw_flag = true;
 }
