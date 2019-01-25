@@ -1,11 +1,11 @@
 #include "chip8.hpp"
-#include "window.h"
+#include "window.hpp"
 #include <iostream>
 
 void poll_events(Window& window) {
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
-		window.poll_events(event);
+		window.handle_event(event);
 	}
 }
 

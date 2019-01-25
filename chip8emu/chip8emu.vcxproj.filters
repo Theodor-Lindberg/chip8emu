@@ -38,7 +38,7 @@
     <ClInclude Include="include\fontset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\window.h">
+    <ClInclude Include="include\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,9 +1,8 @@
-#include "window.h"
+#include "window.hpp"
 #include <iostream>
 
-Window::Window(const std::string& title, int width, int height) :
-	_title(title), _width(width), _height(height) {
-	_closed = !init();
+Window::Window(const char* title, int width, int height) {
+	_closed = !init(title, width, height);
 }
 
 Window::~Window() {
@@ -16,7 +15,7 @@ bool Window::is_closed() const {
 	return _closed;
 }
 
-void Window::poll_events(SDL_Event &event) {
+void Window::handle_event(SDL_Event &event) {
 	switch (event.type) {
 	case SDL_QUIT:
 		_closed = true;
@@ -32,15 +31,15 @@ void Window::clear() const {
 	SDL_RenderClear(_renderer);
 }
 
-bool Window::init() {
+bool Window::init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		std::cerr << "Could not initialize SDL video and video." << std::endl;
 		return false;
 	}
 
-	_window = SDL_CreateWindow(_title.c_str(),
+	_window = SDL_CreateWindow(title,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		_width, _height,
+		width, height,
 		SDL_WINDOW_RESIZABLE);
 
 	if (_window == nullptr) {

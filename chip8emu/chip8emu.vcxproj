@@ -28,7 +28,7 @@
     <ClInclude Include="include\chip8.hpp" />
     <ClInclude Include="include\fontset.hpp" />
     <ClInclude Include="include\chip8instructions.hpp" />
-    <ClInclude Include="include\window.h" />
+    <ClInclude Include="include\window.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
