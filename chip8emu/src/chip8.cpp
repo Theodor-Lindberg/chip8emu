@@ -61,6 +61,10 @@ void Chip8::set_clock_freq(uint16_t& frequency) {
 	clock_frequency = frequency;
 }
 
+void Chip8::update_key(const uint8_t& key_index, const bool& state) {
+	keypad_state[key_index] = state;
+}
+
 bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
 	if (size > ROM_START_ADDRESS)
 		return false;

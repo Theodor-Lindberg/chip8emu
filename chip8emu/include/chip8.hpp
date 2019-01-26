@@ -26,6 +26,11 @@ public:
 	/// <param name="frequency"> The frequency of the clock. </param>
 	void set_clock_freq(uint16_t& frequency);
 
+	/// <summary> Update the state of a key on the keypad. </summary>
+	/// <param name="key_index"> The index of the key. </param>
+	/// <param name="state"> The state of the key, true for pressed and false for released. </param>
+	void update_key(const uint8_t& key_index, const bool& state);
+
 private:
 	friend class OPCodes;
 	OPCodes op_codes = OPCodes(*this);
@@ -38,6 +43,7 @@ private:
 	static constexpr size_t ROM_START_ADDRESS = 0x200;
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
 	static constexpr size_t TIMER_FREQUENCY = 60;
+	static constexpr size_t KEYS = 16;
 
 	uint16_t I = 0;						// Index register
 	uint16_t pc = ROM_START_ADDRESS;	// Program counter
@@ -53,6 +59,8 @@ private:
 	uint16_t cpu_cycles = 0;
 	uint8_t sound_timer = 0;
 	uint8_t delay_timer = 0;
+
+	bool keypad_state[KEYS] = {};
 
 	bool _draw_flag;
 
