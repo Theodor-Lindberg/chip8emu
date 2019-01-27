@@ -61,7 +61,7 @@ void Chip8::update_key(const uint8_t& key_index, const bool& state) {
 	keypad_state[key_index] = state;
 }
 
-const uint8_t* const Chip8::get_gfx_buffer() const {
+const bool* const Chip8::get_gfx_buffer() const {
 	return gfx_buffer;
 }
 

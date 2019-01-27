@@ -13,32 +13,32 @@ bool OPCodes::execute(uint16_t& op_code) {
 		case 0x00EE: RET(); break;
 		default: return false;
 		}
-	case 0x1000: JP_ADDR(op_code & 0x0FFF); break;		// 1NNN
-	case 0x2000: CALL_ADDR(op_code & 0x0FFF); break;	// 2NNN
-	case 0x3000: SE_VxByte(op_code); break;				// 3xkk
-	case 0x4000: SNE_Vx_Byte(op_code); break;			// 4xkk
-	case 0x5000: SE_Vx_Vy(op_code); break;				// 5xy0
-	case 0x6000: LD_Vx_Byte(op_code); break;			// 6xkk
-	case 0x7000: ADD_Vx_Byte(op_code); break;			// 7xkk
+	case 0x1000: JP_ADDR(op_code & 0x0FFF);		break;	// 1NNN
+	case 0x2000: CALL_ADDR(op_code & 0x0FFF);	break;	// 2NNN
+	case 0x3000: SE_VxByte(op_code);			break;	// 3xkk
+	case 0x4000: SNE_Vx_Byte(op_code);			break;	// 4xkk
+	case 0x5000: SE_Vx_Vy(op_code);				break;	// 5xy0
+	case 0x6000: LD_Vx_Byte(op_code);			break;	// 6xkk
+	case 0x7000: ADD_Vx_Byte(op_code);			break;	// 7xkk
 	case 0x8000:										// 8xyN
 		switch (op_code & 0x000F)
 		{
-		case 0x0000: LD_Vx_Vy(op_code); break;
-		case 0x0001: OR_Vx_Vy(op_code); break;
-		case 0x0002: AND_Vx_Vy(op_code); break;
-		case 0x0003: XOR_Vx_Vy(op_code); break;
-		case 0x0004: ADD_Vx_Vy(op_code); break;
-		case 0x0005: SUB_Vx_Vy(op_code); break;
-		case 0x0006: SHR_Vx_Vy(op_code); break;
-		case 0x0007: SUBN_Vx_Vy(op_code); break;
-		case 0x000E: SHL_Vx_Vy(op_code); break;
+		case 0x0000: LD_Vx_Vy(op_code);		break;
+		case 0x0001: OR_Vx_Vy(op_code);		break;
+		case 0x0002: AND_Vx_Vy(op_code);	break;
+		case 0x0003: XOR_Vx_Vy(op_code);	break;
+		case 0x0004: ADD_Vx_Vy(op_code);	break;
+		case 0x0005: SUB_Vx_Vy(op_code);	break;
+		case 0x0006: SHR_Vx_Vy(op_code);	break;
+		case 0x0007: SUBN_Vx_Vy(op_code);	break;
+		case 0x000E: SHL_Vx_Vy(op_code);	break;
 		default: return false;
 		}
-	case 0x9000: SNE_Vx_Vy(op_code); break;				// 9xy0
-	case 0xA000: LD_I_ADDR(op_code); break;				// ANNN
-	case 0xB000: JP_V0_ADDR(op_code); break;			// BNNN
-	case 0xC000: RND_Vx_Byte(op_code); break;			// Cxkk
-	case 0xD000: DRW_Vx_Vy_Nibble(op_code); break;		// Dxyn
+	case 0x9000: SNE_Vx_Vy(op_code);		break;		// 9xy0
+	case 0xA000: LD_I_ADDR(op_code);		break;		// ANNN
+	case 0xB000: JP_V0_ADDR(op_code);		break;		// BNNN
+	case 0xC000: RND_Vx_Byte(op_code);		break;		// Cxkk
+	case 0xD000: DRW_Vx_Vy_Nibble(op_code);	break;		// Dxyn
 	case 0xE000:										// Ex
 		switch (op_code & 0x00FF)
 		{
@@ -202,6 +202,26 @@ void OPCodes::RND_Vx_Byte(uint16_t& op_code) {
 }
 
 void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
+	// Top left corner of the sprite to draw to.
+	uint8_t x_pos = chip8.V[(op_code & 0x0F00) >> 8];
+	uint8_t y_pos = chip8.V[(op_code & 0x00F0) >> 4];
+
+	// The height of the sprite.
+	uint8_t height = op_code & 0x000F;
+
+	chip8.V[0xF] = 0;
+
+	for (int dy = 0; dy < height; dy++) {
+		uint8_t pixels = chip8.memory[chip8.I + dy];
+		for (int dx = 0; dx < chip8.SPRITE_WIDTH; dx++) {
+			if (pixels & (0x80 >> dx)) {
+				int pixel_index = x_pos + dx + (y_pos + dy) * chip8.SCREEN_WIDTH;
+				chip8.V[0xF] |= chip8.gfx_buffer[pixel_index];
+				chip8.gfx_buffer[pixel_index] ^= 1;
+			}
+		}
+	}
+
 	chip8.pc += 2;
 	chip8.draw_flag = true;
 }

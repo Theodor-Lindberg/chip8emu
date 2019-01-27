@@ -35,7 +35,7 @@ public:
 	void reset_draw_flag();
 
 	/// <summary> Return a pointer to the graphics buffer. </summary>
-	const uint8_t* const get_gfx_buffer() const;
+	const bool* const get_gfx_buffer() const;
 
 	static constexpr size_t SCREEN_WIDTH = 64;
 	static constexpr size_t SCREEN_HEIGHT = 32;
@@ -51,6 +51,7 @@ private:
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
 	static constexpr size_t TIMER_FREQUENCY = 60;
 	static constexpr size_t KEYS = 16;
+	static constexpr size_t SPRITE_WIDTH = 8;
 
 	uint16_t I = 0;						// Index register
 	uint16_t pc = ROM_START_ADDRESS;	// Program counter
@@ -60,7 +61,7 @@ private:
 
 	uint8_t memory[MEMORY_SIZE] = {};	// Main memory
 	uint8_t V[GPDR_COUNT] = {};			// General purpose data registers
-	uint8_t gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
+	bool gfx_buffer[SCREEN_WIDTH * SCREEN_HEIGHT] = {}; // Buffer to draw graphics to
 
 	uint16_t clock_frequency = TIMER_FREQUENCY;
 	uint16_t cpu_cycles = 0;

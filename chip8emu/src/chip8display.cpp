@@ -9,10 +9,10 @@ Chip8Display::Chip8Display(Window& window, const Chip8& cpu, const SDL_Point& po
 }
 
 void Chip8Display::render() const {
-	const uint8_t* const gfx_buffer = chip8.get_gfx_buffer();
+	const bool* const gfx_buffer = chip8.get_gfx_buffer();
 
 	for (int i = 0; i < chip8.SCREEN_WIDTH * chip8.SCREEN_HEIGHT; i++) {
-		SetRenderDrawColor(renderer, gfx_buffer[i] == 1 ? accent : background);
+		SetRenderDrawColor(renderer, gfx_buffer[i] ? accent : background);
 		SDL_Rect pixel = { (i % (int)chip8.SCREEN_WIDTH) * pixel_size + position.x, (i / (int)chip8.SCREEN_WIDTH) * pixel_size + position.y,
 			pixel_size, pixel_size };
 		SDL_RenderFillRect(renderer, &pixel);
