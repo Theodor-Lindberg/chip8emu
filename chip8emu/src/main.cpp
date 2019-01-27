@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	Chip8Input keypad(chip8);
 	Chip8Display display = Chip8Display(window, chip8, SDL_Point{50, 50});
 
-	while (!window.is_closed()) {
+	while (window.is_open()) {
 		if (chip8.get_draw_flag()) {
 			display.render();
 			chip8.reset_draw_flag();

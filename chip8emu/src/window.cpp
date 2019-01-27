@@ -2,7 +2,7 @@
 #include <iostream>
 
 Window::Window(const char* title, int width, int height) {
-	closed = !init(title, width, height);
+	window_open = init(title, width, height);
 }
 
 Window::~Window() {
@@ -11,14 +11,14 @@ Window::~Window() {
 	SDL_Quit();
 }
 
-bool Window::is_closed() const {
-	return closed;
+bool Window::is_open() const {
+	return window_open;
 }
 
 void Window::handle_event(SDL_Event &event) {
 	switch (event.type) {
 	case SDL_QUIT:
-		closed = true;
+		window_open = false;
 		break;
 	default:
 		break;

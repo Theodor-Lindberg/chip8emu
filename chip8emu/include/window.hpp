@@ -9,8 +9,8 @@ public:
 	Window(const char* title, int width, int height);
 	~Window();
 
-	/// <summary> Return true if the window is closed, otherwise false. </summary>
-	bool is_closed() const;
+	/// <summary> Return true if the window is open, otherwise false. </summary>
+	bool is_open() const;
 
 	/// <summary> Handle event. </summary>
 	/// <param name="event"> The event to handle. </param>
@@ -23,7 +23,7 @@ protected:
 	SDL_Renderer* renderer = nullptr;
 
 private:
-	bool closed;
+	bool window_open;
 	SDL_Window* window = nullptr;
 
 	/// <summary> Initialize the gui. </summary>
