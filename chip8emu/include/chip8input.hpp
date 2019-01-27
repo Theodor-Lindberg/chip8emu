@@ -7,8 +7,10 @@
 class Chip8Input {
 public:
 	Chip8Input(Chip8& cpu);
-	~Chip8Input();
+	~Chip8Input() = default;
 
+	/// <summary> Handle event. </summary>
+	/// <param name="event"> The event to handle. </param>
 	void handle_events(SDL_Event& event);
 
 private:

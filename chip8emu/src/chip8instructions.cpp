@@ -3,8 +3,6 @@
 
 OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }
 
-OPCodes::~OPCodes() { }
-
 bool OPCodes::execute(uint16_t& op_code) {
 	switch (op_code & 0xF000)
 	{
@@ -16,7 +14,6 @@ bool OPCodes::execute(uint16_t& op_code) {
 		default: return false;
 		}
 	case 0x1000: JP_ADDR(op_code & 0x0FFF); break;		// 1NNN
-		
 	case 0x2000: CALL_ADDR(op_code & 0x0FFF); break;	// 2NNN
 	case 0x3000: SE_VxByte(op_code); break;				// 3xkk
 	case 0x4000: SNE_Vx_Byte(op_code); break;			// 4xkk
@@ -81,7 +78,7 @@ void OPCodes::RET() {
 
 void OPCodes::JP_ADDR(uint16_t address) {
 	chip8.pc = address;
-	chip8._draw_flag = true;
+	chip8.draw_flag = true;
 }
 
 void OPCodes::CALL_ADDR(uint16_t address) {
@@ -206,5 +203,5 @@ void OPCodes::RND_Vx_Byte(uint16_t& op_code) {
 
 void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 	chip8.pc += 2;
-	chip8._draw_flag = true;
+	chip8.draw_flag = true;
 }

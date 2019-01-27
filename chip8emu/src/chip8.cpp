@@ -8,8 +8,6 @@ Chip8::Chip8() {
 	}
 }
 
-Chip8::~Chip8() { }
-
 void Chip8::reset() {
 	std::memset((uint8_t*)memory + ROM_START_ADDRESS, 0, MAX_ROM_SIZE);
 	std::memset(&stack, 0, sizeof(stack));
@@ -27,8 +25,6 @@ void Chip8::reset() {
 }
 
 void Chip8::emulate_cycle() {
-	_draw_flag = false;
-
 	cpu_cycles++;
 	if (cpu_cycles == clock_frequency / TIMER_FREQUENCY) {
 		if (sound_timer > 0)
@@ -49,8 +45,8 @@ bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
 	return true;
 }
 
-bool Chip8::draw_flag() const {
-	return _draw_flag;
+bool Chip8::get_draw_flag() const {
+	return draw_flag;
 }
 
 void Chip8::set_clock_freq(uint16_t& frequency) {
@@ -63,6 +59,14 @@ void Chip8::set_clock_freq(uint16_t& frequency) {
 
 void Chip8::update_key(const uint8_t& key_index, const bool& state) {
 	keypad_state[key_index] = state;
+}
+
+const uint8_t* const Chip8::get_gfx_buffer() const {
+	return gfx_buffer;
+}
+
+void Chip8::reset_draw_flag() {
+	draw_flag = false;
 }
 
 bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {

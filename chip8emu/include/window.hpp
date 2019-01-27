@@ -20,11 +20,11 @@ public:
 	void clear() const;
 
 protected:
-	SDL_Renderer* _renderer = nullptr;
+	SDL_Renderer* renderer = nullptr;
 
 private:
-	bool _closed;
-	SDL_Window* _window = nullptr;
+	bool closed;
+	SDL_Window* window = nullptr;
 
 	/// <summary> Initialize the gui. </summary>
 	/// <param name="title"> The title of the window. </param>

@@ -6,7 +6,7 @@
 class Chip8 {
 public:
 	Chip8();
-	~Chip8();
+	~Chip8() = default;
 
 	/// <summary> Reset the cpu to a clean state. </summary>
 	void reset();
@@ -20,7 +20,7 @@ public:
 	bool load_rom(const uint8_t* const p_rom, const size_t &size);
 
 	/// <summary> The flag is set if changes have been made to the display. </summary>
-	bool draw_flag() const;
+	bool get_draw_flag() const;
 
 	/// <summary> Set the frequency of which the cpu will be running to get timers correct. </summary>
 	/// <param name="frequency"> The frequency of the clock. </param>
@@ -31,6 +31,15 @@ public:
 	/// <param name="state"> The state of the key, true for pressed and false for released. </param>
 	void update_key(const uint8_t& key_index, const bool& state);
 
+	/// <summary> Reset the draw flag. </summary>
+	void reset_draw_flag();
+
+	/// <summary> Return a pointer to the graphics buffer. </summary>
+	const uint8_t* const get_gfx_buffer() const;
+
+	static constexpr size_t SCREEN_WIDTH = 64;
+	static constexpr size_t SCREEN_HEIGHT = 32;
+
 private:
 	friend class OPCodes;
 	OPCodes op_codes = OPCodes(*this);
@@ -38,8 +47,6 @@ private:
 	static constexpr size_t STACK_SIZE = 16;
 	static constexpr size_t MEMORY_SIZE = 4096;
 	static constexpr size_t GPDR_COUNT = 16;
-	static constexpr size_t SCREEN_WIDTH = 64;
-	static constexpr size_t SCREEN_HEIGHT = 32;
 	static constexpr size_t ROM_START_ADDRESS = 0x200;
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
 	static constexpr size_t TIMER_FREQUENCY = 60;
@@ -60,9 +67,9 @@ private:
 	uint8_t sound_timer = 0;
 	uint8_t delay_timer = 0;
 
-	bool keypad_state[KEYS] = {};
+	bool keypad_state[KEYS] = {};		// The current state of the keypad where true is pressed and false is released.
 
-	bool _draw_flag;
+	bool draw_flag = true;
 
 	/// <summary> Load a font set into main memory. </summary>
 	/// <param name="p_font"> Pointer to the font set. </param>

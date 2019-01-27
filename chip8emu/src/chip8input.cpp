@@ -1,8 +1,6 @@
 #include "chip8input.hpp"
 
-Chip8Input::Chip8Input( Chip8& cpu) : chip8(cpu) { }
-
-Chip8Input::~Chip8Input() { }
+Chip8Input::Chip8Input(Chip8& cpu) : chip8(cpu) { }
 
 void Chip8Input::handle_events(SDL_Event& event) {
 	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {

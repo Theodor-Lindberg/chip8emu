@@ -9,7 +9,7 @@ class Chip8;
 class OPCodes {
 public:
 	OPCodes(Chip8& cpu);
-	~OPCodes();
+	~OPCodes() = default;
 
 	/// <summary> Execute instruction based on operation code </summary>
 	/// <remarks> A switch is used instead of a map or array of function pointers

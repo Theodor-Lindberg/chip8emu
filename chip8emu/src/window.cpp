@@ -2,23 +2,23 @@
 #include <iostream>
 
 Window::Window(const char* title, int width, int height) {
-	_closed = !init(title, width, height);
+	closed = !init(title, width, height);
 }
 
 Window::~Window() {
-	SDL_DestroyRenderer(_renderer);
-	SDL_DestroyWindow(_window);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
 bool Window::is_closed() const {
-	return _closed;
+	return closed;
 }
 
 void Window::handle_event(SDL_Event &event) {
 	switch (event.type) {
 	case SDL_QUIT:
-		_closed = true;
+		closed = true;
 		break;
 	default:
 		break;
@@ -26,9 +26,9 @@ void Window::handle_event(SDL_Event &event) {
 }
 
 void Window::clear() const {
-	SDL_RenderPresent(_renderer);
-	SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
-	SDL_RenderClear(_renderer);
+	SDL_RenderPresent(renderer);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
 }
 
 bool Window::init(const char* title, int width, int height) {
@@ -37,19 +37,19 @@ bool Window::init(const char* title, int width, int height) {
 		return false;
 	}
 
-	_window = SDL_CreateWindow(title,
+	window = SDL_CreateWindow(title,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height,
 		SDL_WINDOW_RESIZABLE);
 
-	if (_window == nullptr) {
+	if (window == nullptr) {
 		std::cerr << "Failed to create window." << std::endl;
 		return false;
 	}
 
-	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_PRESENTVSYNC);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
-	if (_renderer == nullptr) {
+	if (renderer == nullptr) {
 		std::cerr << "Failed to create renderer." << std::endl;
 		return false;
 	}
