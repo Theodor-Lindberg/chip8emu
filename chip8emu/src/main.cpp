@@ -5,7 +5,7 @@
 
 void poll_events(Window& window, Chip8Input& keypad) {
 	SDL_Event event;
-	if (SDL_PollEvent(&event)) {
+	while (SDL_PollEvent(&event)) {
 		window.handle_event(event);
 		keypad.handle_events(event);
 	}
