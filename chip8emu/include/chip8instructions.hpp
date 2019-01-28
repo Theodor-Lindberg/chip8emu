@@ -118,6 +118,49 @@ private:
 	/// <summary> Display n-byte sprite starting at memory location I at (Vx, Vy), set VF if there was a collision. </summary>
 	/// <param name="adress"> The operation code. </param>
 	void DRW_Vx_Vy_Nibble(uint16_t& op_code);
+
+	/// <summary> Skip the next instruction if the key with the value of register Vx is pressed. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SKP_Vx(uint16_t& op_code);
+
+	/// <summary> Skip the next instruction if the key with the value of register Vx is not pressed. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void SKPN_Vx(uint16_t& op_code);
+
+	/// <summary> Set the delay timer to the value of register Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_Vx_DT(uint16_t& op_code);
+
+	/// <summary> Set the delay timer to the value of register Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_DT_Vx(uint16_t& op_code);
+
+	/// <summary> Set the sound timer to the value of register Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_ST_Vx(uint16_t& op_code);
+
+	/// <summary> Add the value of register Vx the index register. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void ADD_I_Vx(uint16_t& op_code);
+
+	/// <summary> The value of I is set to the location for the hexadecimal sprite,
+	/// corresponding to the value of Vx. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_F_Vx(uint16_t& op_code);
+
+	/// <summary> Take the decimal value of Vx, and places the hundreds digit in memory at location in I,
+	/// the tens digit at location I+1, and the ones digit at location I+2.</summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_B_Vx(uint16_t& op_code);
+
+	/// <summary> Store registers V0 through Vx in memory starting at location I. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_I_Vx(uint16_t& op_code);
+
+	
+	/// <summary> Read registers V0 through Vx from memory starting at location I. </summary>
+	/// <param name="adress"> The operation code. </param>
+	void LD_Vx_I(uint16_t& op_code);
 };
 
 #endif // !CHIP8_INSTRUCTIONS

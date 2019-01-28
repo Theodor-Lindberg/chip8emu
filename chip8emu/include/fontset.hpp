@@ -3,7 +3,9 @@
 #ifndef FONT_SET
 #define FONT_SET
 
-static constexpr uint8_t font_set[80] = {
+static constexpr size_t font_size = 5;
+
+static constexpr uint8_t font_set[16 * font_size] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0,	// 0
 	0x20, 0x60, 0x20, 0x20, 0x70,	// 1
 	0xF0, 0x10, 0xF0, 0x80, 0xF0,	// 2

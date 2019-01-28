@@ -1,4 +1,5 @@
 #include "chip8.hpp"
+#include "fontset.hpp"
 #include <cstring>
 
 OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }
@@ -42,22 +43,22 @@ bool OPCodes::execute(uint16_t& op_code) {
 	case 0xE000:										// Ex
 		switch (op_code & 0x00FF)
 		{
-		case 0x009E: break;
-		case 0x00A1: break;
+		case 0x009E: SKP_Vx(op_code);	break;
+		case 0x00A1: SKPN_Vx(op_code);	break;
 		default: return false;
 		}
 	case 0xF000:						// Fx
 		switch (op_code & 0x00FF)
 		{
-		case 0x0007: break;
+		case 0x0007: LD_Vx_DT(op_code);	break;
 		case 0x000A: break;
-		case 0x0015: break;
-		case 0x0018: break;
-		case 0x001E: break;
-		case 0x0029: break;
-		case 0x0033: break;
-		case 0x0055: break;
-		case 0x0065: break;
+		case 0x0015: LD_DT_Vx(op_code);	break;
+		case 0x0018: LD_ST_Vx(op_code);	break;
+		case 0x001E: ADD_I_Vx(op_code);	break;
+		case 0x0029: LD_F_Vx(op_code);	break;
+		case 0x0033: LD_B_Vx(op_code);	break;
+		case 0x0055: LD_I_Vx(op_code);	break;
+		case 0x0065: LD_Vx_I(op_code);	break;
 		default: return false;
 		}
 	default: return false;
@@ -66,7 +67,7 @@ bool OPCodes::execute(uint16_t& op_code) {
 }
 
 void OPCodes::CLS() {
-	std::memset(&chip8.gfx_buffer, 0, sizeof(chip8.gfx_buffer));
+	memset(&chip8.gfx_buffer, 0, sizeof(chip8.gfx_buffer));
 	chip8.pc += 2;
 }
 
@@ -216,7 +217,7 @@ void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 		for (int dx = 0; dx < chip8.SPRITE_WIDTH; dx++) {
 			if (pixels & (0x80 >> dx)) {
 				int pixel_index = x_pos + dx + (y_pos + dy) * chip8.SCREEN_WIDTH;
-				chip8.V[0xF] |= chip8.gfx_buffer[pixel_index];
+				chip8.V[0xF] |= (uint8_t)chip8.gfx_buffer[pixel_index];
 				chip8.gfx_buffer[pixel_index] ^= 1;
 			}
 		}
@@ -224,4 +225,64 @@ void OPCodes::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 
 	chip8.pc += 2;
 	chip8.draw_flag = true;
+}
+
+void OPCodes::SKP_Vx(uint16_t& op_code) {
+	if (chip8.keypad_state[chip8.V[(op_code & 0x0F00) >> 8]])
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
+}
+
+void OPCodes::SKPN_Vx(uint16_t& op_code) {
+	if (!chip8.keypad_state[chip8.V[(op_code & 0x0F00) >> 8]])
+		chip8.pc += 4;
+	else
+		chip8.pc += 2;
+}
+
+void OPCodes::LD_Vx_DT(uint16_t& op_code) {
+	chip8.V[(op_code & 0x0F00) >> 8] = chip8.delay_timer;
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_DT_Vx(uint16_t& op_code) {
+	chip8.delay_timer = chip8.V[(op_code & 0x0F00) >> 8];
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_ST_Vx(uint16_t& op_code) {
+	chip8.sound_timer = chip8.V[(op_code & 0x0F00) >> 8];
+	chip8.pc += 2;
+}
+
+void OPCodes::ADD_I_Vx(uint16_t& op_code) {
+	chip8.I += chip8.V[(op_code & 0x0F00) >> 8];
+	chip8.V[0xF] = chip8.I >= chip8.MEMORY_SIZE;
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_F_Vx(uint16_t& op_code) {
+	chip8.I += chip8.V[(op_code & 0x0F00) >> 8] * font_size;
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_B_Vx(uint16_t& op_code) {
+	uint8_t Vx = chip8.V[(op_code & 0x0F00) >> 8];
+	chip8.memory[chip8.I] = Vx / 100;
+	chip8.memory[chip8.I + 1] = Vx / 10 - Vx % 10;
+	chip8.memory[chip8.I + 2] = Vx % 10;
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_I_Vx(uint16_t& op_code) {
+	memcpy(&chip8.memory[chip8.I], chip8.V, ((op_code & 0x0F00) >> 8) + 1);
+
+	chip8.pc += 2;
+}
+
+void OPCodes::LD_Vx_I(uint16_t& op_code) {
+	memcpy(chip8.V, &chip8.memory[chip8.I], ((op_code & 0x0F00) >> 8) + 1);
+
+	chip8.pc += 2;
 }

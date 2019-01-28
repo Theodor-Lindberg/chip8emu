@@ -50,7 +50,7 @@ private:
 	static constexpr size_t ROM_START_ADDRESS = 0x200;
 	static constexpr size_t MAX_ROM_SIZE = MEMORY_SIZE - ROM_START_ADDRESS;
 	static constexpr size_t TIMER_FREQUENCY = 60;
-	static constexpr size_t KEYS = 16;
+	static constexpr size_t KEY_COUNT = 16;
 	static constexpr size_t SPRITE_WIDTH = 8;
 
 	uint16_t I = 0;						// Index register
@@ -68,7 +68,9 @@ private:
 	uint8_t sound_timer = 0;
 	uint8_t delay_timer = 0;
 
-	bool keypad_state[KEYS] = {};		// The current state of the keypad where true is pressed and false is released.
+	bool keypad_state[KEY_COUNT] = {};		// The current state of the keypad where true is pressed and false is released.
+
+	bool waiting_for_keypress = false;
 
 	bool draw_flag = true;
 
@@ -80,6 +82,12 @@ private:
 	/// <summary> Fetch the current operation code. </summary>
 	/// <returns> The current operation code. </returns>
 	uint16_t fetch_opcode() const;
+
+	/// <summary> Update the sound and delay timer. </summary>
+	void update_timers();
+
+	/// <summary> Return true if any key is pressed, otherwise return false. </summary>
+	bool any_pressed_keys();
 };
 
 #endif // !CHIP_8
