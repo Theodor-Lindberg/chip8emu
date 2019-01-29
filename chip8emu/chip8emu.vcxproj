@@ -22,6 +22,7 @@
     <ClCompile Include="src\chip8.cpp" />
     <ClCompile Include="src\chip8display.cpp" />
     <ClCompile Include="src\chip8input.cpp" />
+    <ClCompile Include="src\filehelper.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\chip8instructions.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="include\chip8.hpp" />
     <ClInclude Include="include\chip8display.hpp" />
     <ClInclude Include="include\chip8input.hpp" />
+    <ClInclude Include="include\filehelper.hpp" />
     <ClInclude Include="include\fontset.hpp" />
     <ClInclude Include="include\chip8instructions.hpp" />
     <ClInclude Include="include\window.hpp" />
