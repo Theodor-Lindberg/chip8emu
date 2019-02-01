@@ -1,6 +1,5 @@
 #include "chip8.hpp"
 #include "fontset.hpp"
-#include <cstring>
 
 OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }
 
@@ -10,58 +9,63 @@ bool OPCodes::execute(const uint16_t& op_code) {
 	case 0x0000:
 		switch (op_code)
 		{
-		case 0x00E0: CLS(); break;
-		case 0x00EE: RET(); break;
-		default: return false;
+		case 0x00E0: CLS(); return true;
+		case 0x00EE: RET(); return true;
+		default: 
+			return false;
 		}
-	case 0x1000: JP_ADDR(op_code & 0x0FFF);		break;	// 1NNN
-	case 0x2000: CALL_ADDR(op_code & 0x0FFF);	break;	// 2NNN
-	case 0x3000: SE_VxByte(op_code);			break;	// 3xkk
-	case 0x4000: SNE_Vx_Byte(op_code);			break;	// 4xkk
-	case 0x5000: SE_Vx_Vy(op_code);				break;	// 5xy0
-	case 0x6000: LD_Vx_Byte(op_code);			break;	// 6xkk
-	case 0x7000: ADD_Vx_Byte(op_code);			break;	// 7xkk
-	case 0x8000:										// 8xyN
+	case 0x1000: JP_ADDR(op_code & 0x0FFF);		return true;	// 1NNN
+	case 0x2000: CALL_ADDR(op_code & 0x0FFF);	return true;	// 2NNN
+	case 0x3000: SE_VxByte(op_code);			return true;	// 3xkk
+	case 0x4000: SNE_Vx_Byte(op_code);			return true;	// 4xkk
+	case 0x5000: SE_Vx_Vy(op_code);				return true;	// 5xy0
+	case 0x6000: LD_Vx_Byte(op_code);			return true;	// 6xkk
+	case 0x7000: ADD_Vx_Byte(op_code);			return true;	// 7xkk
+	case 0x8000:												// 8xyN
 		switch (op_code & 0x000F)
 		{
-		case 0x0000: LD_Vx_Vy(op_code);		break;
-		case 0x0001: OR_Vx_Vy(op_code);		break;
-		case 0x0002: AND_Vx_Vy(op_code);	break;
-		case 0x0003: XOR_Vx_Vy(op_code);	break;
-		case 0x0004: ADD_Vx_Vy(op_code);	break;
-		case 0x0005: SUB_Vx_Vy(op_code);	break;
-		case 0x0006: SHR_Vx_Vy(op_code);	break;
-		case 0x0007: SUBN_Vx_Vy(op_code);	break;
-		case 0x000E: SHL_Vx_Vy(op_code);	break;
-		default: return false;
+		case 0x0000: LD_Vx_Vy(op_code);		return true;
+		case 0x0001: OR_Vx_Vy(op_code);		return true;
+		case 0x0002: AND_Vx_Vy(op_code);	return true;
+		case 0x0003: XOR_Vx_Vy(op_code);	return true;
+		case 0x0004: ADD_Vx_Vy(op_code);	return true;
+		case 0x0005: SUB_Vx_Vy(op_code);	return true;
+		case 0x0006: SHR_Vx_Vy(op_code);	return true;
+		case 0x0007: SUBN_Vx_Vy(op_code);	return true;
+		case 0x000E: SHL_Vx_Vy(op_code);	return true;
+		default: 
+			return false;
 		}
-	case 0x9000: SNE_Vx_Vy(op_code);		break;		// 9xy0
-	case 0xA000: LD_I_ADDR(op_code);		break;		// ANNN
-	case 0xB000: JP_V0_ADDR(op_code);		break;		// BNNN
-	case 0xC000: RND_Vx_Byte(op_code);		break;		// Cxkk
-	case 0xD000: DRW_Vx_Vy_Nibble(op_code);	break;		// Dxyn
-	case 0xE000:										// Ex
+	case 0x9000: SNE_Vx_Vy(op_code);		return true;	// 9xy0
+	case 0xA000: LD_I_ADDR(op_code);		return true;	// ANNN
+	case 0xB000: JP_V0_ADDR(op_code);		return true;	// BNNN
+	case 0xC000: RND_Vx_Byte(op_code);		return true;	// Cxkk
+	case 0xD000: DRW_Vx_Vy_Nibble(op_code);	return true;	// Dxyn
+	case 0xE000:											// Ex
 		switch (op_code & 0x00FF)
 		{
-		case 0x009E: SKP_Vx(op_code);	break;
-		case 0x00A1: SKPN_Vx(op_code);	break;
-		default: return false;
+		case 0x009E: SKP_Vx(op_code);	return true;
+		case 0x00A1: SKPN_Vx(op_code);	return true;
+		default: 
+			return false;
 		}
 	case 0xF000:						// Fx
 		switch (op_code & 0x00FF)
 		{
-		case 0x0007: LD_Vx_DT(op_code);	break;
-		case 0x000A: break;
-		case 0x0015: LD_DT_Vx(op_code);	break;
-		case 0x0018: LD_ST_Vx(op_code);	break;
-		case 0x001E: ADD_I_Vx(op_code);	break;
-		case 0x0029: LD_F_Vx(op_code);	break;
-		case 0x0033: LD_B_Vx(op_code);	break;
-		case 0x0055: LD_I_Vx(op_code);	break;
-		case 0x0065: LD_Vx_I(op_code);	break;
-		default: return false;
+		case 0x0007: LD_Vx_DT(op_code);	return true;
+		case 0x000A:					return true;
+		case 0x0015: LD_DT_Vx(op_code);	return true;
+		case 0x0018: LD_ST_Vx(op_code);	return true;
+		case 0x001E: ADD_I_Vx(op_code);	return true;
+		case 0x0029: LD_F_Vx(op_code);	return true;
+		case 0x0033: LD_B_Vx(op_code);	return true;
+		case 0x0055: LD_I_Vx(op_code);	return true;
+		case 0x0065: LD_Vx_I(op_code);	return true;
+		default: 
+			return false;
 		}
-	default: return false;
+	default: 
+		return false;
 	}
 	return true;
 }
