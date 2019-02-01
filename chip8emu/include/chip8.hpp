@@ -1,7 +1,7 @@
 #ifndef CHIP_8
 #define CHIP_8
 
-#include "chip8instructions.hpp"
+#include <random>
 
 class Chip8 {
 public:
@@ -41,9 +41,6 @@ public:
 	static constexpr size_t SCREEN_HEIGHT = 32;
 
 private:
-	friend class OPCodes;
-	OPCodes op_codes = OPCodes(*this);
-
 	static constexpr size_t STACK_SIZE = 16;
 	static constexpr size_t MEMORY_SIZE = 4096;
 	static constexpr size_t GPDR_COUNT = 16;
@@ -55,6 +52,7 @@ private:
 
 	uint16_t I = 0;						// Index register
 	uint16_t pc = ROM_START_ADDRESS;	// Program counter
+	uint16_t curr_op_code = 0;
 
 	uint8_t sp = 0;						// Stack pointer
 	uint16_t stack[STACK_SIZE] = {};
@@ -68,6 +66,9 @@ private:
 	uint8_t sound_timer = 0;
 	uint8_t delay_timer = 0;
 
+	std::mt19937 rng_eng{ std::random_device()() };
+	std::uniform_int_distribution<uint16_t> distr{ 0, 0xFF };
+
 	bool keypad_state[KEY_COUNT] = {};		// The current state of the keypad where true is pressed and false is released.
 
 	bool waiting_for_keypress = false;
@@ -79,15 +80,25 @@ private:
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
 	bool load_font(const uint8_t* const p_font, const size_t &size);
 
-	/// <summary> Fetch the current operation code. </summary>
-	/// <returns> The current operation code. </returns>
-	uint16_t fetch_opcode() const;
+	/// <summary> Fetch the new operation code. </summary>
+	uint16_t fetch_opcode();
 
 	/// <summary> Update the sound and delay timer. </summary>
 	void update_timers();
 
 	/// <summary> Return true if any key is pressed, otherwise return false. </summary>
 	bool any_pressed_keys();
+
+	// The following functions are implemented in 'chip8instructions.cpp'.
+
+	/// <summary> Execute instruction based on operation code </summary>
+	/// <remarks> A switch is used instead of a map or array of function pointers
+	/// so that the compiler can optimize it into a faster lookup table. </remarks>
+	/// <param name="op_code"> The code of the instruction </param>
+	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
+	bool execute(uint16_t& op_code);
+
+	#include "chip8instructions.hpp"
 };
 
 #endif // !CHIP_8

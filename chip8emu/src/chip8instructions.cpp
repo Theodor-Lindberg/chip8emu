@@ -1,9 +1,8 @@
 #include "chip8.hpp"
 #include "fontset.hpp"
 
-OPCodes::OPCodes(Chip8& cpu) : chip8(cpu) { }
 
-bool OPCodes::execute(const uint16_t& op_code) {
+bool Chip8::execute(uint16_t& op_code) {
 	switch (op_code & 0xF000)
 	{
 	case 0x0000:
@@ -14,14 +13,14 @@ bool OPCodes::execute(const uint16_t& op_code) {
 		default: 
 			return false;
 		}
-	case 0x1000: JP_ADDR(op_code & 0x0FFF);		return true;	// 1NNN
-	case 0x2000: CALL_ADDR(op_code & 0x0FFF);	return true;	// 2NNN
-	case 0x3000: SE_VxByte(op_code);			return true;	// 3xkk
-	case 0x4000: SNE_Vx_Byte(op_code);			return true;	// 4xkk
-	case 0x5000: SE_Vx_Vy(op_code);				return true;	// 5xy0
-	case 0x6000: LD_Vx_Byte(op_code);			return true;	// 6xkk
-	case 0x7000: ADD_Vx_Byte(op_code);			return true;	// 7xkk
-	case 0x8000:												// 8xyN
+	case 0x1000: JP_ADDR(op_code);			return true;	// 1NNN
+	case 0x2000: CALL_ADDR(op_code);		return true;	// 2NNN
+	case 0x3000: SE_VxByte(op_code);		return true;	// 3xkk
+	case 0x4000: SNE_Vx_Byte(op_code);		return true;	// 4xkk
+	case 0x5000: SE_Vx_Vy(op_code);			return true;	// 5xy0
+	case 0x6000: LD_Vx_Byte(op_code);		return true;	// 6xkk
+	case 0x7000: ADD_Vx_Byte(op_code);		return true;	// 7xkk
+	case 0x8000:											// 8xyN
 		switch (op_code & 0x000F)
 		{
 		case 0x0000: LD_Vx_Vy(op_code);		return true;
@@ -70,223 +69,223 @@ bool OPCodes::execute(const uint16_t& op_code) {
 	return true;
 }
 
-void OPCodes::CLS() const {
-	memset(&chip8.gfx_buffer, 0, sizeof(chip8.gfx_buffer));
-	chip8.pc += 2;
+void Chip8::CLS() {
+	memset(gfx_buffer, 0, sizeof(gfx_buffer));
+	pc += 2;
 }
 
-void OPCodes::RET() const {
-	chip8.sp--;
-	chip8.pc = chip8.stack[chip8.sp];
-	chip8.pc += 2;
+void Chip8::RET() {
+	sp--;
+	pc = stack[sp];
+	pc += 2;
 }
 
-void OPCodes::JP_ADDR(uint16_t address) const {
-	chip8.pc = address;
-	chip8.draw_flag = true;
+void Chip8::JP_ADDR(uint16_t& op_code) {
+	pc = op_code & 0x0FFF;
+	draw_flag = true;
 }
 
-void OPCodes::CALL_ADDR(uint16_t address) const {
-	chip8.sp++;
-	chip8.stack[chip8.sp] = chip8.pc;
-	chip8.pc = address;
+void Chip8::CALL_ADDR(uint16_t& op_code) {
+	sp++;
+	stack[sp] = pc;
+	pc = op_code & 0x0FFF;
 }
 
-void OPCodes::SE_VxByte(const uint16_t& op_code) const {
-	if (chip8.V[(op_code & 0x0F00) >> 8] == (op_code & 0x00FF))
-		chip8.pc += 4;
+void Chip8::SE_VxByte(uint16_t& op_code) {
+	if (V[(op_code & 0x0F00) >> 8] == (op_code & 0x00FF))
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::SNE_Vx_Byte(const uint16_t& op_code) const {
-	if (chip8.V[(op_code & 0x0F00) >> 8] != (op_code & 0x00FF))
-		chip8.pc += 4;
+void Chip8::SNE_Vx_Byte(uint16_t& op_code) {
+	if (V[(op_code & 0x0F00) >> 8] != (op_code & 0x00FF))
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::SE_Vx_Vy(const uint16_t& op_code) const {
-	if (chip8.V[(op_code & 0x0F00) >> 8] == chip8.V[(op_code & 0x00F0) >> 4])
-		chip8.pc += 4;
+void Chip8::SE_Vx_Vy(uint16_t& op_code) {
+	if (V[(op_code & 0x0F00) >> 8] == V[(op_code & 0x00F0) >> 4])
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::LD_Vx_Byte(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] = (op_code & 0x00FF);
-	chip8.pc += 2;
+void Chip8::LD_Vx_Byte(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] = (op_code & 0x00FF);
+	pc += 2;
 }
 
-void OPCodes::ADD_Vx_Byte(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] += (op_code & 0x00FF);
-	chip8.pc += 2;
+void Chip8::ADD_Vx_Byte(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] += (op_code & 0x00FF);
+	pc += 2;
 }
 
-void OPCodes::LD_Vx_Vy(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] = chip8.V[(op_code & 0x00F0) >> 4];
-	chip8.pc += 2;
+void Chip8::LD_Vx_Vy(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] = V[(op_code & 0x00F0) >> 4];
+	pc += 2;
 }
 
-void OPCodes::OR_Vx_Vy(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] |= chip8.V[(op_code & 0x00F0) >> 4];
-	chip8.pc += 2;
+void Chip8::OR_Vx_Vy(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] |= V[(op_code & 0x00F0) >> 4];
+	pc += 2;
 }
 
-void OPCodes::AND_Vx_Vy(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] &= chip8.V[(op_code & 0x00F0) >> 4];
-	chip8.pc += 2;
+void Chip8::AND_Vx_Vy(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] &= V[(op_code & 0x00F0) >> 4];
+	pc += 2;
 }
 
-void OPCodes::XOR_Vx_Vy(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] ^= chip8.V[(op_code & 0x00F0) >> 4];
-	chip8.pc += 2;
+void Chip8::XOR_Vx_Vy(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] ^= V[(op_code & 0x00F0) >> 4];
+	pc += 2;
 }
 
-void OPCodes::ADD_Vx_Vy(const uint16_t& op_code) const {
+void Chip8::ADD_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
-	chip8.V[(op_code & 0x0F00) >> 8] = (chip8.V[x] + chip8.V[y]) & 0x00FF;
-	chip8.V[0xF] = chip8.V[x] + chip8.V[y] > 0xFF ? 1 : 0;
-	chip8.pc += 2;
+	V[(op_code & 0x0F00) >> 8] = (V[x] + V[y]) & 0x00FF;
+	V[0xF] = V[x] + V[y] > 0xFF ? 1 : 0;
+	pc += 2;
 }
 
-void OPCodes::SUB_Vx_Vy(const uint16_t& op_code) const {
+void Chip8::SUB_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
-	chip8.V[x] -= chip8.V[y];
-	chip8.V[0xF] = chip8.V[y] > chip8.V[y] ? 0 : 1;
-	chip8.pc += 2;
+	V[x] -= V[y];
+	V[0xF] = V[y] > V[y] ? 0 : 1;
+	pc += 2;
 }
 
-void OPCodes::SHR_Vx_Vy(const uint16_t& op_code) const {
+void Chip8::SHR_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
-	chip8.V[x] = chip8.V[y] >> 1;
-	chip8.V[x] /= 2;
-	chip8.V[0xF] = chip8.V[x] & 0x1;
-	chip8.pc += 2;
+	V[x] = V[y] >> 1;
+	V[x] /= 2;
+	V[0xF] = V[x] & 0x1;
+	pc += 2;
 }
 
-void OPCodes::SUBN_Vx_Vy(const uint16_t& op_code) const {
+void Chip8::SUBN_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
-	chip8.V[x] = chip8.V[y] - chip8.V[x];
-	chip8.V[0xF] = chip8.V[x] > chip8.V[y] ? 0 : 1;
-	chip8.pc += 2;
+	V[x] = V[y] - V[x];
+	V[0xF] = V[x] > V[y] ? 0 : 1;
+	pc += 2;
 }
 
-void OPCodes::SHL_Vx_Vy(const uint16_t& op_code) const {
+void Chip8::SHL_Vx_Vy(uint16_t& op_code) {
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
-	chip8.V[x] = chip8.V[y] << 1;
-	chip8.V[x] *= 2;
-	chip8.V[0xF] = (chip8.V[x] & 0x10) >> 4;
-	chip8.pc += 2;
+	V[x] = V[y] << 1;
+	V[x] *= 2;
+	V[0xF] = (V[x] & 0x10) >> 4;
+	pc += 2;
 }
 
-void OPCodes::SNE_Vx_Vy(const uint16_t& op_code) const {
-	if (chip8.V[(op_code & 0x0F00) >> 8] != chip8.V[(op_code & 0x00F0) >> 4])
-		chip8.pc += 4;
+void Chip8::SNE_Vx_Vy(uint16_t& op_code) {
+	if (V[(op_code & 0x0F00) >> 8] != V[(op_code & 0x00F0) >> 4])
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::LD_I_ADDR(const uint16_t& op_code) const {
-	chip8.I = op_code & 0x0FFF;
-	chip8.pc += 2;
+void Chip8::LD_I_ADDR(uint16_t& op_code) {
+	I = op_code & 0x0FFF;
+	pc += 2;
 }
 
-void OPCodes::JP_V0_ADDR(const uint16_t& op_code) const {
-	chip8.pc = chip8.V[(op_code & 0x0F00) >> 8] + op_code & 0x0FFF;
+void Chip8::JP_V0_ADDR(uint16_t& op_code) {
+	pc = V[(op_code & 0x0F00) >> 8] + op_code & 0x0FFF;
 }
 
-void OPCodes::RND_Vx_Byte(const uint16_t& op_code) {
-	chip8.V[(op_code & 0x0F00) >> 8] = distr(rng_eng) & (op_code & 0x00FF);
-	chip8.pc += 2;
+void Chip8::RND_Vx_Byte(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] = distr(rng_eng) & (op_code & 0x00FF);
+	pc += 2;
 }
 
-void OPCodes::DRW_Vx_Vy_Nibble(const uint16_t& op_code) const {
+void Chip8::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 	// Top left corner of the sprite to draw to.
-	uint8_t x_pos = chip8.V[(op_code & 0x0F00) >> 8];
-	uint8_t y_pos = chip8.V[(op_code & 0x00F0) >> 4];
+	uint8_t x_pos = V[(op_code & 0x0F00) >> 8];
+	uint8_t y_pos = V[(op_code & 0x00F0) >> 4];
 
 	// The height of the sprite.
 	uint8_t height = op_code & 0x000F;
 
-	chip8.V[0xF] = 0;
+	V[0xF] = 0;
 
 	for (int dy = 0; dy < height; dy++) {
-		uint8_t pixels = chip8.memory[chip8.I + dy];
-		for (int dx = 0; dx < chip8.SPRITE_WIDTH; dx++) {
+		uint8_t pixels = memory[I + dy];
+		for (int dx = 0; dx < SPRITE_WIDTH; dx++) {
 			if (pixels & (0x80 >> dx)) {
-				int pixel_index = x_pos + dx + (y_pos + dy) * chip8.SCREEN_WIDTH;
-				chip8.V[0xF] |= (uint8_t)chip8.gfx_buffer[pixel_index];
-				chip8.gfx_buffer[pixel_index] ^= 1;
+				int pixel_index = x_pos + dx + (y_pos + dy) * SCREEN_WIDTH;
+				V[0xF] |= (uint8_t)gfx_buffer[pixel_index];
+				gfx_buffer[pixel_index] ^= 1;
 			}
 		}
 	}
 
-	chip8.pc += 2;
-	chip8.draw_flag = true;
+	pc += 2;
+	draw_flag = true;
 }
 
-void OPCodes::SKP_Vx(const uint16_t& op_code) const {
-	if (chip8.keypad_state[chip8.V[(op_code & 0x0F00) >> 8]])
-		chip8.pc += 4;
+void Chip8::SKP_Vx(uint16_t& op_code) {
+	if (keypad_state[V[(op_code & 0x0F00) >> 8]])
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::SKPN_Vx(const uint16_t& op_code) const {
-	if (!chip8.keypad_state[chip8.V[(op_code & 0x0F00) >> 8]])
-		chip8.pc += 4;
+void Chip8::SKPN_Vx(uint16_t& op_code) {
+	if (!keypad_state[V[(op_code & 0x0F00) >> 8]])
+		pc += 4;
 	else
-		chip8.pc += 2;
+		pc += 2;
 }
 
-void OPCodes::LD_Vx_DT(const uint16_t& op_code) const {
-	chip8.V[(op_code & 0x0F00) >> 8] = chip8.delay_timer;
-	chip8.pc += 2;
+void Chip8::LD_Vx_DT(uint16_t& op_code) {
+	V[(op_code & 0x0F00) >> 8] = delay_timer;
+	pc += 2;
 }
 
-void OPCodes::LD_DT_Vx(const uint16_t& op_code) const {
-	chip8.delay_timer = chip8.V[(op_code & 0x0F00) >> 8];
-	chip8.pc += 2;
+void Chip8::LD_DT_Vx(uint16_t& op_code) {
+	delay_timer = V[(op_code & 0x0F00) >> 8];
+	pc += 2;
 }
 
-void OPCodes::LD_ST_Vx(const uint16_t& op_code) const {
-	chip8.sound_timer = chip8.V[(op_code & 0x0F00) >> 8];
-	chip8.pc += 2;
+void Chip8::LD_ST_Vx(uint16_t& op_code) {
+	sound_timer = V[(op_code & 0x0F00) >> 8];
+	pc += 2;
 }
 
-void OPCodes::ADD_I_Vx(const uint16_t& op_code) const {
-	chip8.I += chip8.V[(op_code & 0x0F00) >> 8];
-	chip8.V[0xF] = chip8.I >= chip8.MEMORY_SIZE;
-	chip8.pc += 2;
+void Chip8::ADD_I_Vx(uint16_t& op_code) {
+	I += V[(op_code & 0x0F00) >> 8];
+	V[0xF] = I >= MEMORY_SIZE;
+	pc += 2;
 }
 
-void OPCodes::LD_F_Vx(const uint16_t& op_code) const {
-	chip8.I += chip8.V[(op_code & 0x0F00) >> 8] * font_size;
-	chip8.pc += 2;
+void Chip8::LD_F_Vx(uint16_t& op_code) {
+	I += V[(op_code & 0x0F00) >> 8] * font_size;
+	pc += 2;
 }
 
-void OPCodes::LD_B_Vx(const uint16_t& op_code) const {
-	uint8_t Vx = chip8.V[(op_code & 0x0F00) >> 8];
-	chip8.memory[chip8.I] = Vx / 100;
-	chip8.memory[chip8.I + 1] = Vx / 10 - Vx % 10;
-	chip8.memory[chip8.I + 2] = Vx % 10;
-	chip8.pc += 2;
+void Chip8::LD_B_Vx(uint16_t& op_code) {
+	uint8_t Vx = V[(op_code & 0x0F00) >> 8];
+	memory[I] = Vx / 100;
+	memory[I + 1] = Vx / 10 - Vx % 10;
+	memory[I + 2] = Vx % 10;
+	pc += 2;
 }
 
-void OPCodes::LD_I_Vx(const uint16_t& op_code) const {
-	memcpy(&chip8.memory[chip8.I], chip8.V, ((op_code & 0x0F00) >> 8) + 1);
+void Chip8::LD_I_Vx(uint16_t& op_code) {
+	memcpy(&memory[I], V, ((op_code & 0x0F00) >> 8) + 1);
 
-	chip8.pc += 2;
+	pc += 2;
 }
 
-void OPCodes::LD_Vx_I(const uint16_t& op_code) const {
-	memcpy(chip8.V, &chip8.memory[chip8.I], ((op_code & 0x0F00) >> 8) + 1);
+void Chip8::LD_Vx_I(uint16_t& op_code) {
+	memcpy(V, &memory[I], ((op_code & 0x0F00) >> 8) + 1);
 
-	chip8.pc += 2;
+	pc += 2;
 }

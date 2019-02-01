@@ -33,15 +33,15 @@ void Chip8::emulate_cycle() {
 	if (waiting_for_keypress && !any_pressed_keys())
 		return;
 
-	uint16_t op_code = fetch_opcode();
-	op_codes.execute(op_code);
+	curr_op_code = fetch_opcode();
+	execute(curr_op_code);
 }
 
 bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
 	if (size > MAX_ROM_SIZE)
 		return false;
 
-	memcpy(memory, p_rom, size);
+	memcpy(&memory[ROM_START_ADDRESS], p_rom, size);
 	return true;
 }
 
@@ -77,7 +77,7 @@ bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
 	return true;
 }
 
-uint16_t Chip8::fetch_opcode() const {
+uint16_t Chip8::fetch_opcode() {
 	return (memory[pc] << 8) | memory[pc + 1]; // Merge two bytes
 }
 
