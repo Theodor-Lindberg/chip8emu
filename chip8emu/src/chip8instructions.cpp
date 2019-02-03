@@ -52,7 +52,7 @@ bool Chip8::execute(uint16_t& op_code) {
 		switch (op_code & 0x00FF)
 		{
 		case 0x0007: LD_Vx_DT(op_code);	return true;
-		case 0x000A:					return true;
+		case 0x000A: LD_Vx_K(op_code);	return true;
 		case 0x0015: LD_DT_Vx(op_code);	return true;
 		case 0x0018: LD_ST_Vx(op_code);	return true;
 		case 0x001E: ADD_I_Vx(op_code);	return true;
@@ -69,80 +69,79 @@ bool Chip8::execute(uint16_t& op_code) {
 	return true;
 }
 
-void Chip8::CLS() {
-	memset(gfx_buffer, 0, sizeof(gfx_buffer));
+void Chip8::CLS() {								// 0x00E0
+	memset(gfx_buffer, false, sizeof(gfx_buffer));
 	pc += 2;
 }
 
-void Chip8::RET() {
+void Chip8::RET() {								// 0x00EE
 	sp--;
 	pc = stack[sp];
 	pc += 2;
 }
 
-void Chip8::JP_ADDR(uint16_t& op_code) {
+void Chip8::JP_ADDR(uint16_t& op_code) {		// 1NNN
 	pc = op_code & 0x0FFF;
-	draw_flag = true;
 }
 
-void Chip8::CALL_ADDR(uint16_t& op_code) {
-	sp++;
+void Chip8::CALL_ADDR(uint16_t& op_code) {		// 2NNN
 	stack[sp] = pc;
+	sp++;
 	pc = op_code & 0x0FFF;
 }
 
-void Chip8::SE_VxByte(uint16_t& op_code) {
+void Chip8::SE_VxByte(uint16_t& op_code) {		// 3xkk
 	if (V[(op_code & 0x0F00) >> 8] == (op_code & 0x00FF))
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::SNE_Vx_Byte(uint16_t& op_code) {
+void Chip8::SNE_Vx_Byte(uint16_t& op_code) {	// 4xkk
 	if (V[(op_code & 0x0F00) >> 8] != (op_code & 0x00FF))
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::SE_Vx_Vy(uint16_t& op_code) {
+void Chip8::SE_Vx_Vy(uint16_t& op_code) {		// 5xy0
 	if (V[(op_code & 0x0F00) >> 8] == V[(op_code & 0x00F0) >> 4])
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::LD_Vx_Byte(uint16_t& op_code) {
+void Chip8::LD_Vx_Byte(uint16_t& op_code) {		// 6xkk
 	V[(op_code & 0x0F00) >> 8] = (op_code & 0x00FF);
 	pc += 2;
 }
 
-void Chip8::ADD_Vx_Byte(uint16_t& op_code) {
+void Chip8::ADD_Vx_Byte(uint16_t& op_code) {	// 7xkk
 	V[(op_code & 0x0F00) >> 8] += (op_code & 0x00FF);
 	pc += 2;
 }
 
-void Chip8::LD_Vx_Vy(uint16_t& op_code) {
+void Chip8::LD_Vx_Vy(uint16_t& op_code) {		// 8xy0
 	V[(op_code & 0x0F00) >> 8] = V[(op_code & 0x00F0) >> 4];
 	pc += 2;
 }
 
-void Chip8::OR_Vx_Vy(uint16_t& op_code) {
+void Chip8::OR_Vx_Vy(uint16_t& op_code) {		// 8xy1
 	V[(op_code & 0x0F00) >> 8] |= V[(op_code & 0x00F0) >> 4];
 	pc += 2;
 }
 
-void Chip8::AND_Vx_Vy(uint16_t& op_code) {
+void Chip8::AND_Vx_Vy(uint16_t& op_code) {		// 8xy2
 	V[(op_code & 0x0F00) >> 8] &= V[(op_code & 0x00F0) >> 4];
 	pc += 2;
 }
 
-void Chip8::XOR_Vx_Vy(uint16_t& op_code) {
+void Chip8::XOR_Vx_Vy(uint16_t& op_code) {		// 8xy3
 	V[(op_code & 0x0F00) >> 8] ^= V[(op_code & 0x00F0) >> 4];
 	pc += 2;
 }
 
-void Chip8::ADD_Vx_Vy(uint16_t& op_code) {
+void Chip8::ADD_Vx_Vy(uint16_t& op_code) {		// 8xy4
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	V[(op_code & 0x0F00) >> 8] = (V[x] + V[y]) & 0x00FF;
@@ -150,7 +149,7 @@ void Chip8::ADD_Vx_Vy(uint16_t& op_code) {
 	pc += 2;
 }
 
-void Chip8::SUB_Vx_Vy(uint16_t& op_code) {
+void Chip8::SUB_Vx_Vy(uint16_t& op_code) {		// 8xy5
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	V[x] -= V[y];
@@ -158,7 +157,7 @@ void Chip8::SUB_Vx_Vy(uint16_t& op_code) {
 	pc += 2;
 }
 
-void Chip8::SHR_Vx_Vy(uint16_t& op_code) {
+void Chip8::SHR_Vx_Vy(uint16_t& op_code) {		// 8xy6
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	V[x] = V[y] >> 1;
@@ -167,7 +166,7 @@ void Chip8::SHR_Vx_Vy(uint16_t& op_code) {
 	pc += 2;
 }
 
-void Chip8::SUBN_Vx_Vy(uint16_t& op_code) {
+void Chip8::SUBN_Vx_Vy(uint16_t& op_code) {		// 8xy7
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	V[x] = V[y] - V[x];
@@ -175,7 +174,7 @@ void Chip8::SUBN_Vx_Vy(uint16_t& op_code) {
 	pc += 2;
 }
 
-void Chip8::SHL_Vx_Vy(uint16_t& op_code) {
+void Chip8::SHL_Vx_Vy(uint16_t& op_code) {		// 8xyE
 	uint8_t x = (op_code & 0x0F00) >> 8;
 	uint8_t y = (op_code & 0x00F0) >> 4;
 	V[x] = V[y] << 1;
@@ -184,28 +183,28 @@ void Chip8::SHL_Vx_Vy(uint16_t& op_code) {
 	pc += 2;
 }
 
-void Chip8::SNE_Vx_Vy(uint16_t& op_code) {
+void Chip8::SNE_Vx_Vy(uint16_t& op_code) {		// 9xy0
 	if (V[(op_code & 0x0F00) >> 8] != V[(op_code & 0x00F0) >> 4])
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::LD_I_ADDR(uint16_t& op_code) {
+void Chip8::LD_I_ADDR(uint16_t& op_code) {		// ANNN
 	I = op_code & 0x0FFF;
 	pc += 2;
 }
 
-void Chip8::JP_V0_ADDR(uint16_t& op_code) {
+void Chip8::JP_V0_ADDR(uint16_t& op_code) {		// BNNN
 	pc = V[(op_code & 0x0F00) >> 8] + op_code & 0x0FFF;
 }
 
-void Chip8::RND_Vx_Byte(uint16_t& op_code) {
+void Chip8::RND_Vx_Byte(uint16_t& op_code) {	// Cxkk
 	V[(op_code & 0x0F00) >> 8] = distr(rng_eng) & (op_code & 0x00FF);
 	pc += 2;
 }
 
-void Chip8::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
+void Chip8::DRW_Vx_Vy_Nibble(uint16_t& op_code) {	// Dxyn
 	// Top left corner of the sprite to draw to.
 	uint8_t x_pos = V[(op_code & 0x0F00) >> 8];
 	uint8_t y_pos = V[(op_code & 0x00F0) >> 4];
@@ -230,61 +229,65 @@ void Chip8::DRW_Vx_Vy_Nibble(uint16_t& op_code) {
 	draw_flag = true;
 }
 
-void Chip8::SKP_Vx(uint16_t& op_code) {
+void Chip8::SKP_Vx(uint16_t& op_code) {			// Ex9E
 	if (keypad_state[V[(op_code & 0x0F00) >> 8]])
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::SKPN_Vx(uint16_t& op_code) {
+void Chip8::SKPN_Vx(uint16_t& op_code) {		// ExA1
 	if (!keypad_state[V[(op_code & 0x0F00) >> 8]])
 		pc += 4;
 	else
 		pc += 2;
 }
 
-void Chip8::LD_Vx_DT(uint16_t& op_code) {
+void Chip8::LD_Vx_DT(uint16_t& op_code) {		// Fx07
 	V[(op_code & 0x0F00) >> 8] = delay_timer;
 	pc += 2;
 }
 
-void Chip8::LD_DT_Vx(uint16_t& op_code) {
+void Chip8::LD_Vx_K(uint16_t& op_code) {		// Fx0A
+	pc = -1;
+}
+
+void Chip8::LD_DT_Vx(uint16_t& op_code) {		// Fx15
 	delay_timer = V[(op_code & 0x0F00) >> 8];
 	pc += 2;
 }
 
-void Chip8::LD_ST_Vx(uint16_t& op_code) {
+void Chip8::LD_ST_Vx(uint16_t& op_code) {		// Fx18
 	sound_timer = V[(op_code & 0x0F00) >> 8];
 	pc += 2;
 }
 
-void Chip8::ADD_I_Vx(uint16_t& op_code) {
+void Chip8::ADD_I_Vx(uint16_t& op_code) {		// Fx1E
 	I += V[(op_code & 0x0F00) >> 8];
 	V[0xF] = I >= MEMORY_SIZE;
 	pc += 2;
 }
 
-void Chip8::LD_F_Vx(uint16_t& op_code) {
-	I += V[(op_code & 0x0F00) >> 8] * font_size;
+void Chip8::LD_F_Vx(uint16_t& op_code) {		// Fx29
+	I = V[(op_code & 0x0F00) >> 8] * font_size;
 	pc += 2;
 }
 
-void Chip8::LD_B_Vx(uint16_t& op_code) {
+void Chip8::LD_B_Vx(uint16_t& op_code) {		// Fx33
 	uint8_t Vx = V[(op_code & 0x0F00) >> 8];
 	memory[I] = Vx / 100;
-	memory[I + 1] = Vx / 10 - Vx % 10;
+	memory[I + 1] = (Vx / 10) % 10;
 	memory[I + 2] = Vx % 10;
 	pc += 2;
 }
 
-void Chip8::LD_I_Vx(uint16_t& op_code) {
+void Chip8::LD_I_Vx(uint16_t& op_code) {		// Fx55
 	memcpy(&memory[I], V, ((op_code & 0x0F00) >> 8) + 1);
 
 	pc += 2;
 }
 
-void Chip8::LD_Vx_I(uint16_t& op_code) {
+void Chip8::LD_Vx_I(uint16_t& op_code) {		// Fx65
 	memcpy(V, &memory[I], ((op_code & 0x0F00) >> 8) + 1);
 
 	pc += 2;

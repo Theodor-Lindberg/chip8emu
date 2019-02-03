@@ -11,7 +11,7 @@ void Chip8::reset() {
 	memset((uint8_t*)memory + ROM_START_ADDRESS, 0, MAX_ROM_SIZE);
 	memset(&stack, 0, sizeof(stack));
 	memset(&V, 0, sizeof(V));
-	memset(&gfx_buffer, 0, sizeof(gfx_buffer));
+	memset(&gfx_buffer, false, sizeof(gfx_buffer));
 	memset(&keypad_state, false, KEY_COUNT);
 
 	pc = ROM_START_ADDRESS;

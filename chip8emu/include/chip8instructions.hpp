@@ -109,6 +109,10 @@ void SKPN_Vx(uint16_t& op_code);
 /// <param name="op_code"> The operation code. </param>
 void LD_Vx_DT(uint16_t& op_code);
 
+/// <summary> Wait for a key press, store the value of the key in Vx. </summary>
+/// <param name="op_code"> The operation code. </param>
+void LD_Vx_K(uint16_t& op_code);
+
 /// <summary> Set the delay timer to the value of register Vx. </summary>
 /// <param name="op_code"> The operation code. </param>
 void LD_DT_Vx(uint16_t& op_code);
