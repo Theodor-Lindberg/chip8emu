@@ -2,6 +2,9 @@
 #include "chip8display.hpp"
 #include "chip8input.hpp"
 #include <iostream>
+#include <chrono>
+#include <thread>
+#include "filehelper.hpp"
 
 void poll_events(Window& window, Chip8Input& keypad) {
 	SDL_Event event;
@@ -12,10 +15,20 @@ void poll_events(Window& window, Chip8Input& keypad) {
 }
 
 int main(int argc, char *argv[]) {
-	Window window("CHIP8 Emulator", 800, 600);
+	Window window("CHIP8 Emulator", Chip8::SCREEN_WIDTH * 10, Chip8::SCREEN_HEIGHT * 10);
 	Chip8 chip8 = Chip8();
 	Chip8Input keypad(chip8);
-	Chip8Display display = Chip8Display(window, chip8, SDL_Point{50, 50});
+	Chip8Display display = Chip8Display(window, chip8, SDL_Point{0, 0});
+
+	FileHelper::load_binaries("C:/Data/workspace/chip8emu/roms/tetris.c8", chip8);
+
+	double freq = 84;
+	int target_us = 1000000 / 84;
+	chip8.set_clock_freq(freq * 10);
+
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
+	int delta = 0;
 
 	while (window.is_open()) {
 		if (chip8.get_draw_flag()) {
@@ -23,8 +36,20 @@ int main(int argc, char *argv[]) {
 			chip8.reset_draw_flag();
 			window.clear();
 		}
-
+		
 		poll_events(window, keypad);
+
+		end = std::chrono::high_resolution_clock::now();
+		delta = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+		if (delta < target_us)
+			std::this_thread::sleep_for(std::chrono::microseconds(target_us - delta));
+
+		for (int i = 0; i < 10; i++)
+			chip8.emulate_cycle();
+
+		start = std::chrono::high_resolution_clock::now();
+
 	}
 
 	return EXIT_SUCCESS;
