@@ -19,11 +19,18 @@ public:
 	/// <summary> Clear the screen. </summary>
 	void clear() const;
 
+	/// <summary> Get the width of the screen. </summary>
+	int get_width() const;
+
+	/// <summary> Get the height of the screen. </summary>
+	int get_height() const;
+
 protected:
 	SDL_Renderer* renderer = nullptr;
 
 private:
 	bool window_open;
+	int width, height;
 	SDL_Window* window = nullptr;
 
 	/// <summary> Initialize the gui. </summary>

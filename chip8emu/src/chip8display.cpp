@@ -1,11 +1,14 @@
 #include "chip8display.hpp"
 
 Chip8Display::Chip8Display(Window& window, const Chip8& cpu) :
-	Window(window), chip8(cpu) { }
+	Window(window), chip8(cpu) {
+	pixel_size = window.get_width() / chip8.SCREEN_WIDTH;
+}
 
 Chip8Display::Chip8Display(Window& window, const Chip8& cpu, const SDL_Point& position) :
 	Window(window), chip8(cpu) {
 	this->position = SDL_Point(position);
+	pixel_size = window.get_width() / chip8.SCREEN_WIDTH;
 }
 
 void Chip8Display::render() const {

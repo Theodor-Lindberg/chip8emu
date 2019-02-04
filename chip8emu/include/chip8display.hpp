@@ -16,7 +16,7 @@ public:
 	SDL_Color background = { background.r = 30, background.g = 120, background.b = 150, background.a = 255 };
 	SDL_Color accent = { accent.r = 255, accent.g = 255, accent.b = 255, accent.a = 255 };
 	SDL_Point position = { position.x = 0, position.y = 0 };
-	uint8_t pixel_size = 10;
+	uint8_t pixel_size;
 
 private:
 	const Chip8& chip8;

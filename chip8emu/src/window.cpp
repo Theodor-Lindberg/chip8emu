@@ -31,6 +31,14 @@ void Window::clear() const {
 	SDL_RenderClear(renderer);
 }
 
+int Window::get_width() const {
+	return width;
+}
+
+int Window::get_height() const {
+	return height;
+}
+
 bool Window::init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		std::cerr << "Could not initialize SDL video and video." << std::endl;
@@ -47,7 +55,10 @@ bool Window::init(const char* title, int width, int height) {
 		return false;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
+	this->width = width;
+	this->height = height;
+
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	if (renderer == nullptr) {
 		std::cerr << "Failed to create renderer." << std::endl;
