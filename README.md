@@ -12,7 +12,7 @@ Since there are various implementations of the CHIP-8 please read my [Wiki docum
 ## Developement environment
 I'm using Visual Studio as developement environment on Windows 10, but in the future I maybe create a Makefile or CMake if I decide to make it cross-platform. 
 
-## Showcase of a tetris game
+## Showcase of Tetris game
 ![Tetris gameplay][tetris_gif]
 
 
