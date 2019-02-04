@@ -2,7 +2,7 @@
 #include "fontset.hpp"
 
 
-bool Chip8::execute(uint16_t& op_code) {
+bool Chip8::execute_instruction(uint16_t& op_code) {
 	switch (op_code & 0xF000)
 	{
 	case 0x0000:
@@ -23,15 +23,15 @@ bool Chip8::execute(uint16_t& op_code) {
 	case 0x8000:											// 8xyN
 		switch (op_code & 0x000F)
 		{
-		case 0x0000: LD_Vx_Vy(op_code);		return true;
-		case 0x0001: OR_Vx_Vy(op_code);		return true;
-		case 0x0002: AND_Vx_Vy(op_code);	return true;
-		case 0x0003: XOR_Vx_Vy(op_code);	return true;
-		case 0x0004: ADD_Vx_Vy(op_code);	return true;
-		case 0x0005: SUB_Vx_Vy(op_code);	return true;
-		case 0x0006: SHR_Vx_Vy(op_code);	return true;
-		case 0x0007: SUBN_Vx_Vy(op_code);	return true;
-		case 0x000E: SHL_Vx_Vy(op_code);	return true;
+		case 0x0000: LD_Vx_Vy(op_code);		return true;	// 8xy0
+		case 0x0001: OR_Vx_Vy(op_code);		return true;	// 8xy1
+		case 0x0002: AND_Vx_Vy(op_code);	return true;	// 8xy2
+		case 0x0003: XOR_Vx_Vy(op_code);	return true;	// 8xy3
+		case 0x0004: ADD_Vx_Vy(op_code);	return true;	// 8xy4
+		case 0x0005: SUB_Vx_Vy(op_code);	return true;	// 8xy5
+		case 0x0006: SHR_Vx_Vy(op_code);	return true;	// 8xy6
+		case 0x0007: SUBN_Vx_Vy(op_code);	return true;	// 8xy7
+		case 0x000E: SHL_Vx_Vy(op_code);	return true;	// 8xyE
 		default: 
 			return false;
 		}
@@ -43,23 +43,23 @@ bool Chip8::execute(uint16_t& op_code) {
 	case 0xE000:											// Ex
 		switch (op_code & 0x00FF)
 		{
-		case 0x009E: SKP_Vx(op_code);	return true;
-		case 0x00A1: SKPN_Vx(op_code);	return true;
+		case 0x009E: SKP_Vx(op_code);	return true;		// Ex9E
+		case 0x00A1: SKPN_Vx(op_code);	return true;		// ExA1
 		default: 
 			return false;
 		}
-	case 0xF000:						// Fx
+	case 0xF000:											// Fx
 		switch (op_code & 0x00FF)
 		{
-		case 0x0007: LD_Vx_DT(op_code);	return true;
-		case 0x000A: LD_Vx_K(op_code);	return true;
-		case 0x0015: LD_DT_Vx(op_code);	return true;
-		case 0x0018: LD_ST_Vx(op_code);	return true;
-		case 0x001E: ADD_I_Vx(op_code);	return true;
-		case 0x0029: LD_F_Vx(op_code);	return true;
-		case 0x0033: LD_B_Vx(op_code);	return true;
-		case 0x0055: LD_I_Vx(op_code);	return true;
-		case 0x0065: LD_Vx_I(op_code);	return true;
+		case 0x0007: LD_Vx_DT(op_code);	return true;		// Fx07
+		case 0x000A: LD_Vx_K(op_code);	return true;		// Fx0A
+		case 0x0015: LD_DT_Vx(op_code);	return true;		// Fx15
+		case 0x0018: LD_ST_Vx(op_code);	return true;		// Fx18
+		case 0x001E: ADD_I_Vx(op_code);	return true;		// Fx1E
+		case 0x0029: LD_F_Vx(op_code);	return true;		// Fx29
+		case 0x0033: LD_B_Vx(op_code);	return true;		// Fx33
+		case 0x0055: LD_I_Vx(op_code);	return true;		// Fx55
+		case 0x0065: LD_Vx_I(op_code);	return true;		// Fx65
 		default: 
 			return false;
 		}
@@ -205,7 +205,6 @@ void Chip8::RND_Vx_Byte(uint16_t& op_code) {	// Cxkk
 }
 
 void Chip8::DRW_Vx_Vy_Nibble(uint16_t& op_code) {	// Dxyn
-	// Top left corner of the sprite to draw to.
 	uint8_t x_pos = V[(op_code & 0x0F00) >> 8];
 	uint8_t y_pos = V[(op_code & 0x00F0) >> 4];
 
@@ -283,12 +282,10 @@ void Chip8::LD_B_Vx(uint16_t& op_code) {		// Fx33
 
 void Chip8::LD_I_Vx(uint16_t& op_code) {		// Fx55
 	memcpy(&memory[I], V, ((op_code & 0x0F00) >> 8) + 1);
-
 	pc += 2;
 }
 
 void Chip8::LD_Vx_I(uint16_t& op_code) {		// Fx65
 	memcpy(V, &memory[I], ((op_code & 0x0F00) >> 8) + 1);
-
 	pc += 2;
 }

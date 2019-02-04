@@ -34,7 +34,7 @@ void Chip8::emulate_cycle() {
 		return;
 
 	curr_op_code = fetch_opcode();
-	execute(curr_op_code);
+	execute_instruction(curr_op_code);
 }
 
 bool Chip8::load_rom(const uint8_t* const p_rom, const size_t& size) {
@@ -49,7 +49,7 @@ bool Chip8::get_draw_flag() const {
 	return draw_flag;
 }
 
-void Chip8::set_clock_freq(uint16_t& frequency) {
+void Chip8::set_clock_freq(const uint16_t frequency) {
 	sound_timer %= frequency;
 	delay_timer %= frequency;
 	cpu_cycles %= frequency / TIMER_FREQUENCY;
@@ -83,7 +83,7 @@ uint16_t Chip8::fetch_opcode() {
 
 void Chip8::update_timers() {
 	cpu_cycles++;
-	if (cpu_cycles == clock_frequency / TIMER_FREQUENCY) {
+	if (cpu_cycles % (int)((TIMER_FREQUENCY * TIMER_FREQUENCY) / (float)clock_frequency) == 0) {
 		if (sound_timer > 0)
 			sound_timer--;
 		if (delay_timer > 0)

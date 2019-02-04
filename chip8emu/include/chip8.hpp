@@ -24,7 +24,7 @@ public:
 
 	/// <summary> Set the frequency of which the cpu will be running to get timers correct. </summary>
 	/// <param name="frequency"> The frequency of the clock. </param>
-	void set_clock_freq(uint16_t& frequency);
+	void set_clock_freq(const uint16_t frequency);
 
 	/// <summary> Update the state of a key on the keypad. </summary>
 	/// <param name="key_index"> The index of the key. </param>
@@ -69,7 +69,7 @@ private:
 	std::mt19937 rng_eng{ std::random_device()() };
 	std::uniform_int_distribution<uint16_t> distr{ 0, 0xFF };
 
-	bool keypad_state[KEY_COUNT] = {};		// The current state of the keypad where true is pressed and false is released.
+	bool keypad_state[KEY_COUNT] = {};	// The current state of the keypad where true is pressed and false is released.
 
 	bool waiting_for_keypress = false;
 
@@ -96,7 +96,7 @@ private:
 	/// so that the compiler can optimize it into a faster lookup table. </remarks>
 	/// <param name="op_code"> The code of the instruction </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
-	bool execute(uint16_t& op_code);
+	bool execute_instruction(uint16_t& op_code);
 
 	#include "chip8instructions.hpp"
 };
