@@ -17,7 +17,7 @@ I'm using Visual Studio as developement environment on Windows 10, but in the fu
 
 
 ## Remarks
-Note that this project is still a work in progress so the rom file and clock frequency are still set in the source code.
+Note that this project is still a work in progress so the clock frequency is still set in the source code and the file path is passed as an argument.
 
 [chip8]:https://en.wikipedia.org/wiki/CHIP-8
 [sdl]:https://www.libsdl.org/

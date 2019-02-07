@@ -5,6 +5,9 @@
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
 bool FileHelper::load_binaries(const char* file_path, Chip8& chip8) {
+	if (file_path == nullptr)
+		return false;
+
 	std::ifstream file(file_path, std::ios::binary | std::ios::ate);
 
 	if (file.bad()) {

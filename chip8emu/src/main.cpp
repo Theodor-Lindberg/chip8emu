@@ -20,7 +20,11 @@ int main(int argc, char *argv[]) {
 	Chip8Input keypad(chip8);
 	Chip8Display display = Chip8Display(window, chip8, SDL_Point{0, 0});
 
-	FileHelper::load_binaries("C:/Data/workspace/chip8emu/roms/tetris.c8", chip8);
+	if (!FileHelper::load_binaries(argv[1], chip8)) {
+		std::cout << "Error: could not load the binaries to the emulator" << std::endl;
+		std::getchar();
+		return -1;
+	}
 
 	double freq = 84;
 	int target_us = 1000000 / 84;
