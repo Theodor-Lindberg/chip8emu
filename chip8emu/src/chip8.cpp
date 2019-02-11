@@ -30,9 +30,6 @@ void Chip8::reset() {
 void Chip8::emulate_cycle() {
 	update_timers();
 
-	if (waiting_for_keypress && !any_pressed_keys())
-		return;
-
 	curr_op_code = fetch_opcode();
 	execute_instruction(curr_op_code);
 }
@@ -89,12 +86,4 @@ void Chip8::update_timers() {
 		if (delay_timer > 0)
 			delay_timer--;
 	}
-}
-
-bool Chip8::any_pressed_keys() {
-	for (int i = 0; i < KEY_COUNT; i++) {
-		if (keypad_state[i])
-			return true;
-	}
-	return false;
 }

@@ -86,9 +86,6 @@ private:
 	/// <summary> Update the sound and delay timer. </summary>
 	void update_timers();
 
-	/// <summary> Return true if any key is pressed, otherwise return false. </summary>
-	bool any_pressed_keys();
-
 	// The following functions are implemented in 'chip8instructions.cpp'.
 
 	/// <summary> Execute instruction based on operation code </summary>

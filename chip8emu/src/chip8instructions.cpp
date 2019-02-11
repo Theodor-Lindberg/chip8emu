@@ -248,7 +248,15 @@ void Chip8::LD_Vx_DT(uint16_t& op_code) {		// Fx07
 }
 
 void Chip8::LD_Vx_K(uint16_t& op_code) {		// Fx0A
-	pc = -1;
+	if (waiting_for_keypress)
+		for (int i = 0; i < KEY_COUNT; i++)
+			if (keypad_state[i]) {
+				V[(op_code & 0x0F00) >> 8] = i;
+				waiting_for_keypress = false;
+				pc += 2;
+				return;
+			}
+	waiting_for_keypress = true;
 }
 
 void Chip8::LD_DT_Vx(uint16_t& op_code) {		// Fx15
