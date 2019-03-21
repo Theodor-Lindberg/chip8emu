@@ -16,7 +16,7 @@ void Chip8Display::render() const {
 
 	for (int i = 0; i < chip8.SCREEN_WIDTH * chip8.SCREEN_HEIGHT; i++) {
 		SetRenderDrawColor(renderer, gfx_buffer[i] ? accent : background);
-		SDL_Rect pixel = { (i % (int)chip8.SCREEN_WIDTH) * pixel_size + position.x, (i / (int)chip8.SCREEN_WIDTH) * pixel_size + position.y,
+		SDL_Rect pixel = { (i % (int)chip8.SCREEN_WIDTH) * pixel_size + position.x, static_cast<int>(i / chip8.SCREEN_WIDTH) * pixel_size + position.y,
 			pixel_size, pixel_size };
 		SDL_RenderFillRect(renderer, &pixel);
 	}

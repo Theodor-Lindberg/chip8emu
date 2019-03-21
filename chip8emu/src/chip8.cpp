@@ -8,7 +8,7 @@ Chip8::Chip8() {
 }
 
 void Chip8::reset() {
-	memset((uint8_t*)memory + ROM_START_ADDRESS, 0, MAX_ROM_SIZE);
+	memset(static_cast<uint8_t*>(memory) + ROM_START_ADDRESS, 0, MAX_ROM_SIZE);
 	memset(&stack, 0, sizeof(stack));
 	memset(&V, 0, sizeof(V));
 	memset(&gfx_buffer, false, sizeof(gfx_buffer));
@@ -80,7 +80,7 @@ uint16_t Chip8::fetch_opcode() {
 
 void Chip8::update_timers() {
 	cpu_cycles++;
-	if (cpu_cycles % (int)((TIMER_FREQUENCY * TIMER_FREQUENCY) / (float)clock_frequency) == 0) {
+	if (cpu_cycles % static_cast<int>(((TIMER_FREQUENCY * TIMER_FREQUENCY)) / static_cast<float>(clock_frequency)) == 0) {
 		if (sound_timer > 0)
 			sound_timer--;
 		if (delay_timer > 0)

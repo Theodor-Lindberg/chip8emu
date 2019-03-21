@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	double freq = 84;
+	int freq = 84;
 	int target_us = 1000000 / 84;
 	chip8.set_clock_freq(freq * 10);
 
