@@ -16,9 +16,9 @@ void poll_events(Window& window, Chip8Input& keypad) {
 
 int main(int argc, char *argv[]) {
 	Window window("CHIP8 Emulator", Chip8::SCREEN_WIDTH * 10, Chip8::SCREEN_HEIGHT * 10);
-	Chip8 chip8 = Chip8();
+	Chip8 chip8;
 	Chip8Input keypad(chip8);
-	Chip8Display display = Chip8Display(window, chip8, SDL_Point{0, 0});
+	Chip8Display display(window, chip8, SDL_Point{0, 0});
 
 	if (!FileHelper::load_binaries(argv[1], chip8)) {
 		std::cout << "Error: could not load the binaries to the emulator" << std::endl;

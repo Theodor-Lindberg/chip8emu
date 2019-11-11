@@ -29,8 +29,7 @@ bool FileHelper::load_binaries(const char* file_path, Chip8& chip8) {
 		return false;
 	}
 	file.close();
-
-	bool result = chip8.load_rom((uint8_t*)buffer, len);
+	bool res = chip8.load_rom((uint8_t*)buffer, len);
 	delete[] buffer;
-	return result;
+	return res;
 }

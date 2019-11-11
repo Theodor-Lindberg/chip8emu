@@ -6,7 +6,6 @@
 class Chip8 {
 public:
 	Chip8();
-	~Chip8() = default;
 
 	/// <summary> Reset the cpu to a clean state. </summary>
 	void reset();
@@ -81,7 +80,7 @@ private:
 	bool load_font(const uint8_t* const p_font, const size_t &size);
 
 	/// <summary> Fetch the new operation code. </summary>
-	uint16_t fetch_opcode();
+	uint16_t fetch_opcode() const;
 
 	/// <summary> Update the sound and delay timer. </summary>
 	void update_timers();
@@ -93,7 +92,7 @@ private:
 	/// so that the compiler can optimize it into a faster lookup table. </remarks>
 	/// <param name="op_code"> The code of the instruction </param>
 	/// <returns> If the function succeeds true is returned, otherwise false. </returns>
-	bool execute_instruction(uint16_t& op_code);
+	bool execute_instruction(const uint16_t& op_code);
 
 	#include "chip8instructions.hpp"
 };

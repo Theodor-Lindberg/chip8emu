@@ -8,7 +8,6 @@ class Chip8Display : public Window {
 public:
 	Chip8Display(Window& window, const Chip8& cpu);
 	Chip8Display(Window& window, const Chip8& cpu, const SDL_Point& position);
-	~Chip8Display() = default;
 
 	/// <summary> Render the graphics buffer to the screen. </summary>
 	void render() const;

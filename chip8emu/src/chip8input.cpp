@@ -2,7 +2,7 @@
 
 Chip8Input::Chip8Input(Chip8& cpu) : chip8(cpu) { }
 
-void Chip8Input::handle_events(SDL_Event& event) {
+void Chip8Input::handle_events(const SDL_Event& event) {
 	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
 		switch (event.key.keysym.scancode) {
 		case SDL_SCANCODE_X:	chip8.update_key(0x0, event.type == SDL_KEYDOWN);	break;

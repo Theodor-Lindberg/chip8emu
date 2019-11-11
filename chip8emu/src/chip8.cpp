@@ -74,7 +74,7 @@ bool Chip8::load_font(const uint8_t* const p_font, const size_t& size) {
 	return true;
 }
 
-uint16_t Chip8::fetch_opcode() {
+uint16_t Chip8::fetch_opcode() const {
 	return (memory[pc] << 8) | memory[pc + 1]; // Merge two bytes
 }
 
