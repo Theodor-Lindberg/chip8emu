@@ -10,7 +10,7 @@ public:
 	~Window();
 
 	/// <summary> Return true if the window is open, otherwise false. </summary>
-	bool is_open() const;
+	[[nodiscard]] bool is_open() const;
 
 	/// <summary> Handle event. </summary>
 	/// <param name="event"> The event to handle. </param>
@@ -20,10 +20,10 @@ public:
 	void clear() const;
 
 	/// <summary> Get the width of the screen. </summary>
-	int get_width() const;
+	[[nodiscard]] int get_width() const;
 
 	/// <summary> Get the height of the screen. </summary>
-	int get_height() const;
+	[[nodiscard]] int get_height() const;
 
 protected:
 	SDL_Renderer* renderer = nullptr;

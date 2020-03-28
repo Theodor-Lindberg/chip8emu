@@ -19,7 +19,7 @@ public:
 	bool load_rom(const uint8_t* const p_rom, const size_t &size);
 
 	/// <summary> The flag is set if changes have been made to the display. </summary>
-	bool get_draw_flag() const;
+	[[nodiscard]] bool get_draw_flag() const;
 
 	/// <summary> Set the frequency of which the cpu will be running to get timers correct. </summary>
 	/// <param name="frequency"> The frequency of the clock. </param>
@@ -34,7 +34,7 @@ public:
 	void reset_draw_flag();
 
 	/// <summary> Return a pointer to the graphics buffer. </summary>
-	const bool* const get_gfx_buffer() const;
+	[[nodiscard]] const bool* const get_gfx_buffer() const;
 
 	static constexpr size_t SCREEN_WIDTH = 64;
 	static constexpr size_t SCREEN_HEIGHT = 32;
@@ -80,7 +80,7 @@ private:
 	bool load_font(const uint8_t* const p_font, const size_t &size);
 
 	/// <summary> Fetch the new operation code. </summary>
-	uint16_t fetch_opcode() const;
+	[[nodiscard]] uint16_t fetch_opcode() const;
 
 	/// <summary> Update the sound and delay timer. </summary>
 	void update_timers();
